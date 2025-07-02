@@ -1,6 +1,6 @@
 export default function Card() {
   return (
-    <main className="container my-4">
+    <main className="container-fluid my-4">
         
         <div className="row">
             <h2 className="pt-28 text-6xl font-bold text-center g-2">
