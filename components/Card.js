@@ -1,7 +1,7 @@
 'use client'
 export default function Card() {
   return (
-    <main className="container-fluid my-4">
+    <main className="container my-4">
         
       {/* Heading */}
       <div className="row">
@@ -83,6 +83,7 @@ export default function Card() {
         .hover-card:hover .hover-zoom {
           transform: scale(1.05);
         }
+          
       `}</style>
     </main>
   );

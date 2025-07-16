@@ -1,13 +1,15 @@
 'use client';
 
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import './navbar.css'; // หรือ '../styles/navbar.css' แล้วแต่ path
+
 
 export default function Navbar() {
   const pathname = usePathname();
 
-    // ✅ โหลด Bootstrap JS ทันทีเมื่อ component โหลด (ครั้งแรก)
   useEffect(() => {
     import("bootstrap/dist/js/bootstrap.bundle.min.js");
   }, []);
@@ -50,8 +52,8 @@ export default function Navbar() {
             <li className="nav-item">
               <Link
                 href="/"
-                className={`nav-link text-dark hover:text-primary hover:bg-light px-3 rounded-pill ${
-                  pathname === "/" ? "active fw-bold text-primary" : ""
+                className={`nav-link text-dark px-3 rounded-pill ${
+                  pathname === "/" ? "active fw-bold text-primary" : "hover:text-primary hover:bg-light"
                 }`}
               >
                 หน้าแรก
@@ -60,8 +62,8 @@ export default function Navbar() {
             <li className="nav-item">
               <Link
                 href="/about"
-                className={`nav-link text-dark hover:text-primary hover:bg-light px-3 rounded-pill ${
-                  pathname === "/about" ? "active fw-bold text-primary" : ""
+                className={`nav-link text-dark px-3 rounded-pill ${
+                  pathname === "/about" ? "active fw-bold text-primary" : "hover:text-primary hover:bg-light"
                 }`}
               >
                 เกี่ยวกับ
@@ -70,8 +72,8 @@ export default function Navbar() {
             <li className="nav-item">
               <Link
                 href="/service"
-                className={`nav-link text-dark hover:text-primary hover:bg-light px-3 rounded-pill ${
-                  pathname === "/service" ? "active fw-bold text-primary" : ""
+                className={`nav-link text-dark px-3 rounded-pill ${
+                  pathname === "/service" ? "active fw-bold text-primary" : "hover:text-primary hover:bg-light"
                 }`}
               >
                 บริการ
@@ -80,8 +82,8 @@ export default function Navbar() {
             <li className="nav-item">
               <Link
                 href="/contact"
-                className={`nav-link text-dark hover:text-primary hover:bg-light px-3 rounded-pill ${
-                  pathname === "/contact" ? "active fw-bold text-primary" : ""
+                className={`nav-link text-dark px-3 rounded-pill ${
+                  pathname === "/contact" ? "active fw-bold text-primary" : "hover:text-primary hover:bg-light"
                 }`}
               >
                 ติดต่อ
@@ -89,27 +91,27 @@ export default function Navbar() {
             </li>
           </ul>
 
-          <form className="d-flex" role="search">
+          <form className="d-flex flex-grow-1 flex-lg-grow-0 me-3 my-2 my-lg-0" role="search" style={{ maxWidth: "300px" }}>
             <input
-              className="form-control me-2 rounded-pill"
+              className="form-control rounded-pill"
               type="search"
               placeholder="ค้นหา"
               aria-label="Search"
             />
-            <button className="btn btn-outline-primary rounded-pill" type="submit">
-              ค้นหา
-            </button>
           </form>
-          <Link href="/Login" className="ms-3 text-decoration-none">
-            <button
-              className="btn-login rounded-pill px-4 py-2 fw-bold border border-danger text-danger bg-white transition-all duration-300 hover:bg-danger hover:text-white hover:shadow-lg"
-            >
+          <button className="btn btn-outline-primary rounded-pill me-3 my-2 my-lg-0 px-4 fw-semibold" type="submit">
+            ค้นหา
+          </button>
+
+          <Link href="/Login" className="text-decoration-none">
+            <button className="btn-login-custom rounded-pill px-4 py-2 fw-bold d-flex align-items-center">
+              <i className="bi bi-person me-2"></i>
               Login
             </button>
           </Link>
-
         </div>
       </div>
+
     </nav>
   );
 }

@@ -23,69 +23,74 @@ export default function Login() {
   };
 
   return (
-    <main className="bg-light d-flex align-items-center justify-content-center min-vh-100">
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4">
-            <div className="card shadow-lg p-4">
-              <h2 className="text-center text-primary mb-4 fw-bold">เข้าสู่ระบบ</h2>
-              <form
-                noValidate
-                className={`needs-validation ${formValidated ? "was-validated" : ""}`}
-                onSubmit={handleSubmit}
-              >
-                <div className="mb-3">
-                  <label className="form-label fw-semibold">ชื่อผู้ใช้</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="กรอกชื่อผู้ใช้"
-                    required
-                  />
-                  <div className="invalid-feedback">กรุณากรอกชื่อผู้ใช้</div>
-                </div>
-
-                <div className="mb-3">
-                  <label className="form-label fw-semibold">รหัสผ่าน</label>
-                  <div className="input-group">
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      className="form-control"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="กรอกรหัสผ่าน"
-                      required
-                    />
-                    <div className="invalid-feedback">กรุณากรอกรหัสผ่าน</div>
-                  </div>
-                </div>
-
-                <div className="form-check mb-3">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id="rememberMe"
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                  />
-                  <label className="form-check-label" htmlFor="rememberMe">
-                    จดจำรหัสผ่าน
-                  </label>
-                </div>
-
-                <button type="submit" className="btn btn-primary w-100 fw-bold">
-                  เข้าสู่ระบบ
-                </button>
-
-                <div className="d-flex justify-content-between mt-3">
-                  <a href="#" className="text-decoration-none small">ลืมรหัสผ่าน?</a>
-                  <a href="/Register" className="text-decoration-none small">สมัครสมาชิก</a>
-                </div>
-              </form>
+    <main className="px-3 py-5">
+      <div className="container" style={{ maxWidth: "480px" }}>
+        <div className="card shadow-sm border-0 p-4">
+          <h2 className="text-center text-primary mb-4 fw-bold" style={{ fontSize: "1.75rem" }}>
+            เข้าสู่ระบบ
+          </h2>
+          <form
+            noValidate
+            className={`needs-validation ${formValidated ? "was-validated" : ""}`}
+            onSubmit={handleSubmit}
+          >
+            {/* Username */}
+            <div className="mb-3">
+              <label className="form-label fw-semibold">ชื่อผู้ใช้</label>
+              <input
+                type="text"
+                className="form-control"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="กรอกชื่อผู้ใช้"
+                required
+              />
+              <div className="invalid-feedback">กรุณากรอกชื่อผู้ใช้</div>
             </div>
-          </div>
+
+            {/* Password */}
+            <div className="mb-3">
+              <label className="form-label fw-semibold">รหัสผ่าน</label>
+              <div className="input-group">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className="form-control"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="กรอกรหัสผ่าน"
+                  required
+                />
+                <div className="invalid-feedback d-block">
+                  {formValidated && !password && "กรุณากรอกรหัสผ่าน"}
+                </div>
+              </div>
+            </div>
+
+            {/* Remember Me */}
+            <div className="form-check mb-3">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="rememberMe"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
+              <label className="form-check-label" htmlFor="rememberMe">
+                จดจำรหัสผ่าน
+              </label>
+            </div>
+
+            {/* Submit */}
+            <button type="submit" className="btn btn-primary w-100 fw-bold">
+              เข้าสู่ระบบ
+            </button>
+
+            {/* Links */}
+            <div className="d-flex justify-content-between mt-3">
+              <a href="#" className="text-decoration-none small text-muted">ลืมรหัสผ่าน?</a>
+              <a href="/Register" className="text-decoration-none small text-primary">สมัครสมาชิก</a>
+            </div>
+          </form>
         </div>
       </div>
     </main>
