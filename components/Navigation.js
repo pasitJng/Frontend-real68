@@ -7,6 +7,11 @@ import { useEffect } from "react";
 export default function Navbar() {
   const pathname = usePathname();
 
+    // ✅ โหลด Bootstrap JS ทันทีเมื่อ component โหลด (ครั้งแรก)
+  useEffect(() => {
+    import("bootstrap/dist/js/bootstrap.bundle.min.js");
+  }, []);
+
   useEffect(() => {
     const closeNavbar = async () => {
       const navbarCollapse = document.querySelector(".navbar-collapse");
@@ -95,6 +100,14 @@ export default function Navbar() {
               ค้นหา
             </button>
           </form>
+          <Link href="/Login" className="ms-3 text-decoration-none">
+            <button
+              className="btn-login rounded-pill px-4 py-2 fw-bold border border-danger text-danger bg-white transition-all duration-300 hover:bg-danger hover:text-white hover:shadow-lg"
+            >
+              Login
+            </button>
+          </Link>
+
         </div>
       </div>
     </nav>
