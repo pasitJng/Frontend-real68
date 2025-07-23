@@ -8,7 +8,7 @@ import Card from "@/components/Card";
 import AlertModal from "@/components/AlertModal"; // เปลี่ยนชื่อให้ตรงกัน
 
 export default function Home() {
-  const [alertVisible, setAlertVisible] = useState(true); //*ปิดใช้งาน Alert ให้พิมพ์ false*
+  const [alertVisible, setAlertVisible] = useState(false); //*ปิดใช้งาน Alert ให้พิมพ์ false*
 
   const handleClose = () => {
     setAlertVisible(false);
