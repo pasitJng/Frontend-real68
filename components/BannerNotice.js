@@ -23,7 +23,7 @@ export default function BannerNotice() {
       }}
       message={
         <Marquee pauseOnHover gradient={false} speed={60}>
-          🚧 This website is under development and improvement! — เว็บไซต์นี้กำลังพัฒนาและปรับปรุง! 🚧
+          🚧 Login & Register is being developed and improved! — ระบบ Login & Register กำลังพัฒนาและปรับปรุง! 🚧
         </Marquee>
       }
     />

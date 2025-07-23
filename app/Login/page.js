@@ -1,5 +1,6 @@
 'use client';
 import { useState } from "react";
+import BannerNotice from "@/components/BannerNotice";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -46,7 +47,9 @@ export default function Login() {
   };
 
   return (
-    <main className="px-3 py-5">
+    <main>
+      <BannerNotice />
+      <div className="px-3 py-5">
       {/* SVG Symbols */}
       <svg xmlns="http://www.w3.org/2000/svg" style={{ display: "none" }}>
         <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
@@ -142,6 +145,7 @@ export default function Login() {
             </div>
           </form>
         </div>
+      </div>
       </div>
     </main>
   );

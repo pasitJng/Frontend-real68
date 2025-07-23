@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Carousel from "@/components/Carousel";
 import Card from "@/components/Card";
-// import BannerNotice from "@/components/BannerNotice";
+ import BannerNotice from "@/components/BannerNotice";
 import AlertModal from "@/components/AlertModal"; // เปลี่ยนชื่อให้ตรงกัน
 
 export default function Home() {
