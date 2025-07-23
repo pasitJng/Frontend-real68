@@ -29,7 +29,7 @@ export default function Carousel() {
           </div>
           <div className="carousel-item">
             <Image
-              src="/image/slide/PanigaleV4.jpg"
+              src="/image/slide/panigalev4.jpg"
               alt="slide02"
               layout="responsive"
               width={1920}
