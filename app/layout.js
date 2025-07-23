@@ -30,6 +30,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`d-flex flex-column min-vh-100 ${prompt.className}`}>
+  
         <Navigation />
         <main className="flex-fill">
           {children}

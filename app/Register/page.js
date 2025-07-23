@@ -221,8 +221,8 @@ export default function Register() {
                 </button>
 
                 <div className="text-center mt-3">
-                  <a href="/Login" className="text-decoration-none small text-primary">
-                    มีบัญชีอยู่แล้ว? เข้าสู่ระบบ
+                  มีบัญชีอยู่แล้ว? <a href="/Login" className="text-decoration-none text-primary">
+                     เข้าสู่ระบบ
                   </a>
                 </div>
 

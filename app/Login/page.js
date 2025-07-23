@@ -119,13 +119,16 @@ export default function Login() {
                 className="form-check-input"
                 type="checkbox"
                 id="rememberMe"
+                name="rememberMe"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
+                
               />
               <label className="form-check-label" htmlFor="rememberMe">
                 จดจำรหัสผ่าน
               </label>
             </div>
+
 
             {/* Submit */}
             <button type="submit" className="btn btn-primary w-100 fw-bold">
