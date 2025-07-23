@@ -10,7 +10,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-dark text-light border-top mt-5 pt-4 pb-2">
-      <div className="d-flex justify-content-center mb-3 gap-4">
+      <div className="d-flex justify-content-center mb-3 gap-4">-
         <a
           href="https://www.facebook.com/ph.sis.th.746802"
           target="_blank"
@@ -38,6 +38,7 @@ export default function Footer() {
         >
           <i className="bi bi-github"></i>
         </a>
+        -
       </div>
 
       <div className="container text-center">
