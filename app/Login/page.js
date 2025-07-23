@@ -141,7 +141,9 @@ export default function Login() {
             {/* Links */}
             <div className="d-flex justify-content-between mt-3">
               <a href="#" className="text-decoration-none small text-muted">ลืมรหัสผ่าน?</a>
-              <a href="/Register" className="text-decoration-none small text-primary">สมัครสมาชิก</a>
+              <div className="small"> ยังไม่มีบัญชีผู้ใช้? 
+                <a href="/Register" className="text-decoration-none text-primary"> สมัครสมาชิก</a>
+              </div>
             </div>
           </form>
         </div>
