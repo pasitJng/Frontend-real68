@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 
 export default function Footer() {
-  
   const [year, setYear] = useState('');
 
   useEffect(() => {
@@ -10,8 +9,8 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="bg-light border-top mt-5">
-      <div className="d-flex justify-content-center mt-2 gap-4">
+    <footer className="bg-dark text-light border-top mt-5 pt-4 pb-2">
+      <div className="d-flex justify-content-center mb-3 gap-4">
         <a
           href="https://www.facebook.com/ph.sis.th.746802"
           target="_blank"
@@ -41,25 +40,28 @@ export default function Footer() {
         </a>
       </div>
 
-      <div className="container text-center py-2">
-        <p className="footer-text text-muted mb-1">
-          © {new Date().getFullYear()} Frontend. All rights reserved.
+      <div className="container text-center">
+        <p className="footer-text text-secondary mb-3 ">
+          © {year} Panigale Project "Fontend68".
+          All rights reserved.
         </p>
       </div>
 
       <style jsx>{`
         .social-icon {
-          color: #6c757d;
+          color: #f8f9fa;
           font-size: 1.2rem;
-          transition: color 0.4s ease;
+          transition: transform 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+          position: relative;
         }
 
         .social-icon:hover {
           color: #dc3545;
+          transform: scale(1.1);
         }
 
         .footer-text {
-          font-size: 0.9rem;
+          font-size: 1rem;
         }
 
         @media (max-width: 768px) {
@@ -67,7 +69,7 @@ export default function Footer() {
             font-size: 0.8rem;
           }
           .social-icon {
-            font-size: 1rem;
+            font-size: 1.3rem;
           }
         }
 
@@ -76,7 +78,7 @@ export default function Footer() {
             font-size: 0.75rem;
           }
           .social-icon {
-            font-size: 0.9rem;
+            font-size: 1.1rem;
           }
         }
       `}</style>

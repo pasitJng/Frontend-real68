@@ -65,7 +65,7 @@ export default function Login() {
 
       <div className="container" style={{ maxWidth: "480px" }}>
         <div className="card shadow-sm border-0 p-4">
-          <h2 className="text-center text-primary mb-4 fw-bold" style={{ fontSize: "1.75rem" }}>
+          <h2 className="text-center text-danger mb-4 fw-bold" style={{ fontSize: "1.75rem" }}>
             เข้าสู่ระบบ
           </h2>
 
@@ -134,7 +134,7 @@ export default function Login() {
 
 
             {/* Submit */}
-            <button type="submit" className="btn btn-primary w-100 fw-bold">
+            <button type="submit" className="btn btn-danger w-100 fw-bold">
               เข้าสู่ระบบ
             </button>
 
@@ -142,7 +142,7 @@ export default function Login() {
             <div className="d-flex justify-content-between mt-3">
               <a href="#" className="text-decoration-none small text-muted">ลืมรหัสผ่าน?</a>
               <div className="small"> ยังไม่มีบัญชีผู้ใช้? 
-                <a href="/Register" className="text-decoration-none text-primary"> สมัครสมาชิก</a>
+                <a href="/Register" className="text-decoration-none text-danger"> สมัครสมาชิก</a>
               </div>
             </div>
           </form>

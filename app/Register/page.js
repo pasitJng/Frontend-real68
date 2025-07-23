@@ -106,7 +106,7 @@ export default function Register() {
         <div className="row justify-content-center">
           <div className="col-12">
             <div className="card shadow-sm p-3 border-0">
-              <h2 className="text-center mb-3 fw-bold text-primary" style={{ fontSize: "1.5rem" }}>
+              <h2 className="text-center mb-3 fw-bold text-danger" style={{ fontSize: "1.5rem" }}>
                 สมัครสมาชิก
               </h2>
 
@@ -297,7 +297,7 @@ export default function Register() {
                 </button>
 
                 <div className="text-center mt-3">
-                  มีบัญชีอยู่แล้ว? <a href="/Login" className="text-decoration-none text-primary">
+                  มีบัญชีอยู่แล้ว? <a href="/Login" className="text-decoration-none text-danger">
                     เข้าสู่ระบบ
                   </a>
                 </div>

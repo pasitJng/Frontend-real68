@@ -1,6 +1,7 @@
 'use client';
 import { useEffect } from "react";
 import Image from "next/image";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function Carousel() {
   useEffect(() => {
@@ -8,42 +9,43 @@ export default function Carousel() {
   }, []);
 
   return (
-  <div className="">
-    <div
-      id="carouselExampleControls"
-      className="carousel slide"
-      data-bs-ride="carousel"
-    >
-      <div className="carousel-inner">
-        <div className="carousel-item active">
-          <Image
-            src="/image/slide/slide01.png"
-            alt="slide01"
-            layout="responsive"
-            width={1920}
-            height={960}
-            priority
-          />
+    <div className="pt-[90px] sm:pt-[100px] md:pt-[110px] lg:pt-[120px] xl:pt-[130px]">
+      <div
+        id="carouselExampleControls"
+        className="carousel slide"
+        data-bs-ride="carousel"
+        data-bs-interval="3000" // ← เพิ่มอันนี้เพื่อกำหนดเวลาเปลี่ยน (มิลลิวินาที)
+      >
+        <div className="carousel-inner">
+          <div className="carousel-item active">
+            <Image
+              src="/image/slide/WearingPage.jpg"
+              alt="slide01"
+              layout="responsive"
+              width={1920}
+              height={960}
+              priority
+            />
+          </div>
+          <div className="carousel-item">
+            <Image
+              src="/image/slide/PanigaleV4.jpg"
+              alt="slide02"
+              layout="responsive"
+              width={1920}
+              height={960}
+            />
+          </div>
+          <div className="carousel-item">
+            <Image
+              src="/image/slide/LamboginiXPanigale.jpg"
+              alt="slide03"
+              layout="responsive"
+              width={1920}
+              height={960}
+            />
+          </div>
         </div>
-        <div className="carousel-item">
-          <Image
-            src="/image/slide/slide02.jpg"
-            alt="slide02"
-            layout="responsive"
-            width={1920}
-            height={960}
-          />
-        </div>
-        <div className="carousel-item">
-          <Image
-            src="/image/slide/slide03.png"
-            alt="slide03"
-            layout="responsive"
-            width={1920}
-            height={960}
-          />
-        </div>
-      </div>
 
         <button
           className="carousel-control-prev"

@@ -20,6 +20,7 @@ export default function BannerNotice() {
         color: '#fa1414ff',
         fontSize: '1rem',
         padding: '12px 16px',
+        zIndex: 1,
       }}
       message={
         <Marquee pauseOnHover gradient={false} speed={60}>
