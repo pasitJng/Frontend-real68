@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import Image from "next/image";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ScrollDown from "./scrolldown";
 
 export default function Carousel() {
   useEffect(() => {
@@ -38,7 +39,7 @@ export default function Carousel() {
           </div>
           <div className="carousel-item">
             <Image
-              src="/image/slide/LamboginiXPanigale.jpg"
+              src="/image/slide/DucatiMY25PanigaleV4.jpg"
               alt="slide03"
               layout="responsive"
               width={1920}
@@ -67,6 +68,7 @@ export default function Carousel() {
           <span className="visually-hidden">Next</span>
         </button>
       </div>
+      <ScrollDown />
     </div>
   );
 }

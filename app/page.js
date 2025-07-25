@@ -9,7 +9,7 @@ import Card from "@/components/Card";
 export default function Home() {
   return (
     <div>
-      <main className="inset-0 flex items-center justify-center bg-gray-900">
+      <main className="inset-0 flex items-center justify-center bg-gray-900 mb-5">
         <Carousel />
         <Card />
         <h1 className="pt-28 text-6xl font-bold text-blue-200 text-center text-white">

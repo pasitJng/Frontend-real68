@@ -1,5 +1,6 @@
 'use client';
 import { useState } from "react";
+import { message } from "antd"; // ✅ เพิ่ม AntD message
 import BannerNotice from "@/components/BannerNotice";
 
 export default function Register() {
@@ -14,9 +15,10 @@ export default function Register() {
     birthdate: '',
     agree: false
   });
-
-  const [validated, setValidated] = useState(false);
+  
   const [alert, setAlert] = useState(null);
+  const [validated, setValidated] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage(); // ✅ ใช้ message API
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -33,20 +35,20 @@ export default function Register() {
     if (form.checkValidity() === false || !formData.agree || !formData.gender) {
       e.stopPropagation();
       setValidated(true);
-      setAlert({
-        type: "warning",
-        message: "Please complete all required fields.",
+      messageApi.open({
+        type: 'warning',
+        content: 'Please complete all required fields.',
       });
       return;
     }
 
     setValidated(true);
-    setAlert({
-      type: "success",
-      message: "Registration successful! (Demo)",
+    messageApi.open({
+      type: 'success',
+      content: 'Registration successful! (Demo)',
     });
 
-    // Reset form
+    // ✅ รีเซ็ตฟอร์ม
     setFormData({
       username: '',
       password: '',
@@ -58,7 +60,6 @@ export default function Register() {
       birthdate: '',
       agree: false
     });
-
     setValidated(false);
   };
 
@@ -78,6 +79,7 @@ export default function Register() {
 
   return (
     <main>
+      {contextHolder}
       <BannerNotice />
 
       {/* SVG Icons */}
@@ -95,7 +97,7 @@ export default function Register() {
 
       <div className="container py-5 px-3">
         <div className="row justify-content-center">
-          <div className="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+          <div className="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-6">
             <div className="card shadow-sm p-4 border-0">
               <h2 className="text-center mb-3 fw-bold text-danger" style={{ fontSize: "1.5rem" }}>
                 Register

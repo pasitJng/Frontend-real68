@@ -1,7 +1,7 @@
 'use client'
 export default function Card() {
   return (
-    <main className="container-fluid position-relative p-0">
+    <main className="container-fluid position-relative mt-10">
 
       {/* Background Video */}
       <video
@@ -33,13 +33,13 @@ export default function Card() {
             <div className="card hover-card">
               <div className="overflow-hidden">
                 <img
-                  src="/image/Card/babyLeo.png"
+                  src="/image/Card/PanigaleV2FinalEdition.png"
                   className="card-img-top hover-zoom"
                   alt="เด็กโหด 1"
                 />
               </div>
               <div className="card-body text-center">
-                <p className="card-text text-white">รูปของเด็กโหด.</p>
+                <p className="card-text text-white">Panigale V2 FinalEdition.</p>
               </div>
             </div>
           </div>
@@ -49,13 +49,13 @@ export default function Card() {
             <div className="card hover-card">
               <div className="overflow-hidden">
                 <img
-                  src="/image/Card/babyLeo.png"
+                  src="/image/Card/PanigaleV4.png"
                   className="card-img-top hover-zoom"
                   alt="เด็กโหด 2"
                 />
               </div>
               <div className="card-body text-center">
-                <p className="card-text text-white">รูปของเด็กโหด.</p>
+                <p className="card-text text-white">Panigale V4.</p>
               </div>
             </div>
           </div>
@@ -65,13 +65,13 @@ export default function Card() {
             <div className="card hover-card">
               <div className="overflow-hidden">
                 <img
-                  src="/image/Card/babyLeo.png"
+                  src="/image/Card/PanigaleV4Tricolore.png"
                   className="card-img-top hover-zoom"
                   alt="เด็กโหด 3"
                 />
               </div>
               <div className="card-body text-center">
-                <p className="card-text text-white">รูปของเด็กโหด.</p>
+                <p className="card-text text-white">Panigale V4 Tricolore.</p>
               </div>
             </div>
           </div>
