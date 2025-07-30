@@ -1,6 +1,6 @@
 'use client';
 import { useState } from "react";
-import { message } from "antd"; // ✅ เพิ่ม AntD message
+import Swal from "sweetalert2"; // ✅ นำเข้า sweetalert2
 import BannerNotice from "@/components/BannerNotice";
 
 export default function Register() {
@@ -15,10 +15,8 @@ export default function Register() {
     birthdate: '',
     agree: false
   });
-  
-  const [alert, setAlert] = useState(null);
+
   const [validated, setValidated] = useState(false);
-  const [messageApi, contextHolder] = message.useMessage(); // ✅ ใช้ message API
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -28,41 +26,75 @@ export default function Register() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
 
     if (form.checkValidity() === false || !formData.agree || !formData.gender) {
       e.stopPropagation();
       setValidated(true);
-      messageApi.open({
-        type: 'warning',
-        content: 'Please complete all required fields.',
+      Swal.fire({
+        icon: 'warning',
+        title: 'Incomplete Form',
+        text: 'Please complete all required fields.',
+        timer: 2000,
+        showConfirmButton: false,
       });
       return;
     }
 
     setValidated(true);
-    messageApi.open({
-      type: 'success',
-      content: 'Registration successful! (Demo)',
-    });
 
-    // ✅ รีเซ็ตฟอร์ม
-    setFormData({
-      username: '',
-      password: '',
-      prefix: '',
-      firstname: '',
-      lastname: '',
-      address: '',
-      gender: '',
-      birthdate: '',
-      agree: false
-    });
-    setValidated(false);
+    try {
+      const response = await fetch("http://itdev.cmtc.ac.th:3000/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+          // ถ้ามี Token หรือ Key:
+          // "Authorization": "Bearer YOUR_TOKEN"
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to register.");
+      }
+
+      const result = await response.json();
+      console.log(result);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Successful',
+        text: result.message || 'User has been registered successfully.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
+      // รีเซ็ตฟอร์ม
+      setFormData({
+        username: '',
+        password: '',
+        prefix: '',
+        firstname: '',
+        lastname: '',
+        address: '',
+        gender: '',
+        birthdate: '',
+        agree: false
+      });
+      setValidated(false);
+
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Registration Failed',
+        text: error.message,
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    }
   };
-
   const getAlertIcon = (type) => {
     switch (type) {
       case "success":
@@ -79,21 +111,10 @@ export default function Register() {
 
   return (
     <main>
-      {contextHolder}
       <BannerNotice />
 
-      {/* SVG Icons */}
-      <svg xmlns="http://www.w3.org/2000/svg" style={{ display: "none" }}>
-        <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
-          <path d="..." />
-        </symbol>
-        <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
-          <path d="..." />
-        </symbol>
-        <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
-          <path d="..." />
-        </symbol>
-      </svg>
+      {/* SVG Icons (ไม่จำเป็นแล้ว หากไม่ใช้ Bootstrap alert) */}
+      {/* ...สามารถลบออกได้ถ้าไม่ใช้งาน... */}
 
       <div className="container py-5 px-3">
         <div className="row justify-content-center">
@@ -102,16 +123,6 @@ export default function Register() {
               <h2 className="text-center mb-3 fw-bold text-danger" style={{ fontSize: "1.5rem" }}>
                 Register
               </h2>
-
-              {/* Alert */}
-              {alert && (
-                <div className={`alert alert-${alert.type} d-flex align-items-center`} role="alert">
-                  <svg className="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label={alert.type}>
-                    <use xlinkHref={`#${getAlertIcon(alert.type)}`} />
-                  </svg>
-                  <div style={{ whiteSpace: "pre-wrap" }}>{alert.message}</div>
-                </div>
-              )}
 
               <form
                 noValidate

@@ -1,6 +1,6 @@
 'use client';
 import { useState } from "react";
-import { message } from "antd"; // ← เพิ่ม
+import Swal from 'sweetalert2'; // ← เพิ่ม SweetAlert2
 import BannerNotice from "@/components/BannerNotice";
 
 export default function Login() {
@@ -10,8 +10,6 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [formValidated, setFormValidated] = useState(false);
 
-  const [messageApi, contextHolder] = message.useMessage(); // ← เพิ่ม
-
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -19,17 +17,23 @@ export default function Login() {
     if (form.checkValidity() === false) {
       e.stopPropagation();
       setFormValidated(true);
-      messageApi.open({
-        type: 'warning',
-        content: 'Please fill in all required fields',
+      Swal.fire({
+        icon: 'warning',
+        title: 'Incomplete form',
+        text: 'Please fill in all required fields',
+        timer: 2000,
+        showConfirmButton: false,
       });
       return;
     }
 
     setFormValidated(true);
-    messageApi.open({
-      type: 'success',
-      content: 'Login successful (Demo)',
+    Swal.fire({
+      icon: 'success',
+      title: 'Login successful',
+      text: 'Welcome! (This is a demo login)',
+      timer: 2000,
+      showConfirmButton: false,
     });
 
     // ✅ รีเซ็ตฟอร์มหลังจาก success
@@ -42,7 +46,6 @@ export default function Login() {
 
   return (
     <main>
-      {contextHolder} {/* ← สำคัญ: ใส่เพื่อให้ AntD message ทำงาน */}
       <BannerNotice />
       <div className="px-3 py-5">
         <div className="container px-3">
