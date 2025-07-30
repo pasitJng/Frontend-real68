@@ -2,13 +2,15 @@
 import { useState } from "react";
 import Swal from "sweetalert2"; // ✅ นำเข้า sweetalert2
 import BannerNotice from "@/components/BannerNotice";
+import { useRouter } from 'next/navigation'
 
 export default function Register() {
+  const router = useRouter()
   const [formData, setFormData] = useState({
     username: '',
     password: '',
-    prefix: '',
     firstname: '',
+    fullname: '',
     lastname: '',
     address: '',
     gender: '',
@@ -66,17 +68,19 @@ export default function Register() {
       Swal.fire({
         icon: 'success',
         title: 'Successful',
-        text: result.message || 'User has been registered successfully.',
+        text: result.message || 'Registration successful.',
         timer: 2000,
         showConfirmButton: false,
+      }).then(function () {
+        router.push('/Login')
       });
 
       // รีเซ็ตฟอร์ม
       setFormData({
         username: '',
         password: '',
-        prefix: '',
         firstname: '',
+        fullname: '',
         lastname: '',
         address: '',
         gender: '',
@@ -161,8 +165,8 @@ export default function Register() {
                     <label className="form-label">Prefix</label>
                     <select
                       className="form-select"
-                      name="prefix"
-                      value={formData.prefix}
+                      name="firstname"
+                      value={formData.firstname}
                       onChange={handleChange}
                       required
                     >
@@ -178,8 +182,8 @@ export default function Register() {
                     <input
                       type="text"
                       className="form-control"
-                      name="firstname"
-                      value={formData.firstname}
+                      name="fullname"
+                      value={formData.fullname}
                       onChange={handleChange}
                       required
                     />

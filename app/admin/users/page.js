@@ -45,6 +45,7 @@ export default function Page() {
             <th className='col-md-2'>Prefix</th>
             <th className='col-md-4'>Firstname</th>
             <th className='col-md-4'>Lastname</th>
+            <th className='col-md-4'>Address</th>
             <th className='col-md-1'>Eidt</th>
             <th className='col-md-1'>Delete</th>
           </tr>
@@ -57,6 +58,7 @@ export default function Page() {
               <td>{item.firstname}</td>
               <td>{item.fullname}</td>
               <td>{item.lastname}</td>
+              <td>{item.address}</td>
               <td><Link href="" className="btn btn-warning">Edit</Link></td>
               <td><button className="btn btn-pill btn-danger" type="button"><i className="fa fa-trash"></i>Del</button></td>
             </tr>
