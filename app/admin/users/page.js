@@ -9,35 +9,26 @@ const MySwal = withReactContent(Swal);
 export default function Page() {
   const [items, setItems] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
-  const [isAllSelected, setIsAllSelected] = useState(false);
+
+  const getUsers = async () => {
+    try {
+      const res = await fetch('http://itdev.cmtc.ac.th:3000/api/users');
+      if (!res.ok) {
+        console.error('Failed to fetch data');
+        return;
+      }
+      const data = await res.json();
+      setItems(data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   useEffect(() => {
-    async function getUsers() {
-      try {
-        const res = await fetch('http://itdev.cmtc.ac.th:3000/api/users');
-        if (!res.ok) {
-          console.error('Failed to fetch data');
-          return;
-        }
-        const data = await res.json();
-        setItems(data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    }
-
     getUsers();
     const interval = setInterval(getUsers, 1000);
     return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-    if (selectedIds.length === items.length && items.length > 0) {
-      setIsAllSelected(true);
-    } else {
-      setIsAllSelected(false);
-    }
-  }, [selectedIds, items]);
 
   const handleSelect = (id) => {
     setSelectedIds((prev) =>
@@ -46,13 +37,11 @@ export default function Page() {
   };
 
   const handleSelectAll = () => {
-    if (isAllSelected) {
+    if (selectedIds.length === items.length) {
       setSelectedIds([]);
     } else {
-      const allIds = items.map((item) => item.id);
-      setSelectedIds(allIds);
+      setSelectedIds(items.map((item) => item.id));
     }
-    setIsAllSelected(!isAllSelected);
   };
 
   const deleteSelected = async () => {
@@ -115,17 +104,25 @@ export default function Page() {
       <br /><br /><br /><br />
       <div className="container">
         <div className="card border-dark shadow">
-          <div className="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+          <div className="card-header bg-dark text-white d-flex flex-wrap justify-content-between align-items-center gap-2">
             <span className="fw-bold fs-5">Users List</span>
-            <button
-              className="btn btn-danger delete-btn"
-              onClick={deleteSelected}
-            >
-              Delete Selected
-            </button>
+            <div className="d-flex flex-wrap gap-2">
+              <button
+                className="btn btn-outline-light btn-sm"
+                onClick={handleSelectAll}
+              >
+                {selectedIds.length === items.length ? 'Deselect All' : 'Select All'}
+              </button>
+              <button
+                className="btn btn-danger btn-sm delete-btn"
+                onClick={deleteSelected}
+              >
+                Delete Selected
+              </button>
+            </div>
           </div>
           <div className="card-body bg-white">
-            <div className="row">
+            <div className="table-responsive">
               <table className="table table-hover text-center align-middle">
                 <thead className="table-dark">
                   <tr>
@@ -133,13 +130,13 @@ export default function Page() {
                       <input
                         type="checkbox"
                         className="form-check-input checkbox-red"
-                        checked={isAllSelected}
                         onChange={handleSelectAll}
+                        checked={items.length > 0 && selectedIds.length === items.length}
                       />
                     </th>
                     <th style={{ width: '10%' }}>#</th>
-                    <th style={{ width: '55%' }}>Username</th>
-                    <th style={{ width: '30%' }}>Action</th>
+                    <th style={{ width: '45%' }}>Username</th>
+                    <th style={{ width: '40%' }}>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -157,11 +154,17 @@ export default function Page() {
                       <td className="text-capitalize">{item.username}</td>
                       <td>
                         <button
-                          className="btn btn-outline-danger fw-semibold view-btn"
+                          className="btn btn-outline-danger btn-sm fw-semibold view-btn me-2"
                           onClick={() => showUserDetail(item)}
                         >
                           View Details
                         </button>
+                        <a
+                          href={`/admin/users/edit/${item.id}`}
+                          className="btn btn-danger btn-sm fw-semibold edit-btn"
+                        >
+                          Edit
+                        </a>
                       </td>
                     </tr>
                   ))}
@@ -187,6 +190,20 @@ export default function Page() {
           box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
         }
 
+        .edit-btn {
+          border-radius: 30px;
+          padding: 6px 18px;
+          transition: all 0.3s ease;
+        }
+
+        .edit-btn:hover {
+          background-color: #b02a37;
+          color: white;
+          transform: translateY(-2px) scale(1.03);
+          box-shadow: 0 4px 10px rgba(176, 42, 55, 0.3);
+          text-decoration: none;
+        }
+
         .delete-btn {
           border-radius: 20px;
           padding: 5px 15px;
@@ -199,6 +216,32 @@ export default function Page() {
 
         .checkbox-red:checked {
           accent-color: #dc3545;
+        }
+
+        @media (max-width: 768px) {
+          .view-btn,
+          .edit-btn {
+            padding: 4px 10px;
+            font-size: 0.85rem;
+          }
+
+          .delete-btn {
+            width: 100%;
+            margin-top: 8px;
+          }
+
+          .card-header {
+            text-align: center;
+          }
+
+          .table thead {
+            font-size: 0.9rem;
+          }
+
+          .table td {
+            font-size: 0.9rem;
+            word-break: break-word;
+          }
         }
       `}</style>
     </>
