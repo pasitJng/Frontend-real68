@@ -15,7 +15,9 @@ export default function Page() {
 
   const getUsers = async () => {
     try {
-      const res = await fetch('http://itdev.cmtc.ac.th:3000/api/users');
+      const res = await fetch('/api/users', {
+        cache: 'no-store', // ป้องกันการ cache
+      });
       if (!res.ok) {
         console.error('Failed to fetch data');
         return;
