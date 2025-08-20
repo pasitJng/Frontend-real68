@@ -1,17 +1,27 @@
 'use client';
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import './navbar.css';
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  // ตรวจสอบว่า login แล้วหรือยัง
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, [pathname]);
+
+  // โหลด Bootstrap
   useEffect(() => {
     import("bootstrap/dist/js/bootstrap.bundle.min.js");
   }, []);
 
+  // ปิด Navbar เมื่อเปลี่ยนหน้า
   useEffect(() => {
     const closeNavbar = async () => {
       const navbarCollapse = document.querySelector(".navbar-collapse");
@@ -27,6 +37,7 @@ export default function Navbar() {
     closeNavbar();
   }, [pathname]);
 
+  // Scroll effect
   useEffect(() => {
     const handleScroll = () => {
       const navbar = document.querySelector(".navbar");
@@ -40,6 +51,13 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // ฟังก์ชัน Logout
+  const handleLogout = () => {
+    localStorage.removeItem("token");  // ลบ token
+    setIsLoggedIn(false);
+    router.push("/Login"); // redirect ไปหน้า Login
+  };
 
   return (
     <nav className="navbar navbar-expand-lg fixed-top py-3">
@@ -80,12 +98,26 @@ export default function Navbar() {
             ))}
           </ul>
 
-          <Link href="/Login" className="text-decoration-none ms-lg-3 mt-3 mt-lg-0 d-block">
-            <button className="btn-login-custom rounded-pill px-4 py-2 fw-bold d-flex align-items-center mx-auto mx-lg-0">
-              <i className="bi bi-person me-2"></i>
-              Login
+          {/* ถ้า login แล้วให้แสดง Logout */}
+          {isLoggedIn ? (
+            <button
+              onClick={handleLogout}
+              className="btn-login-custom rounded-pill px-4 py-2 fw-bold d-flex align-items-center mx-auto mx-lg-0"
+            >
+              <i className="bi bi-box-arrow-right me-2"></i>
+              Logout
             </button>
-          </Link>
+          ) : (
+            <Link
+              href="/Login"
+              className="text-decoration-none ms-lg-3 mt-3 mt-lg-0 d-block"
+            >
+              <button className="btn-login-custom rounded-pill px-4 py-2 fw-bold d-flex align-items-center mx-auto mx-lg-0">
+                <i className="bi bi-person me-2"></i>
+                Login
+              </button>
+            </Link>
+          )}
         </div>
       </div>
     </nav>

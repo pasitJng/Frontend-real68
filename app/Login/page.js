@@ -1,6 +1,7 @@
 'use client';
 import { useState } from "react";
-import Swal from 'sweetalert2'; // ← เพิ่ม SweetAlert2
+import { useRouter } from "next/navigation";
+import Swal from 'sweetalert2';
 import BannerNotice from "@/components/BannerNotice";
 
 export default function Login() {
@@ -9,8 +10,9 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formValidated, setFormValidated] = useState(false);
+  const router = useRouter();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
 
@@ -27,21 +29,48 @@ export default function Login() {
       return;
     }
 
-    setFormValidated(true);
-    Swal.fire({
-      icon: 'success',
-      title: 'Login successful',
-      text: 'Welcome! (This is a demo login)',
-      timer: 2000,
-      showConfirmButton: false,
-    });
+    try {
+      const res = await fetch("http://itdev.cmtc.ac.th:3000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
 
-    // ✅ รีเซ็ตฟอร์มหลังจาก success
-    setUsername("");
-    setPassword("");
-    setRememberMe(false);
-    setShowPassword(false);
-    setFormValidated(false);
+      const data = await res.json();
+
+      if (data.token) {
+        // ✅ เก็บ token
+        if (rememberMe) {
+          localStorage.setItem("token", data.token);
+        } else {
+          sessionStorage.setItem("token", data.token);
+        }
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Login successful',
+          text: 'Welcome!',
+          timer: 2000,
+          showConfirmButton: false,
+        });
+
+        router.push("/admin/users");
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Login failed',
+          text: 'Invalid username or password',
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Server Error',
+        text: 'Unable to connect to server',
+      });
+    }
   };
 
   return (

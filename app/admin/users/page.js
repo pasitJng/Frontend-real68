@@ -3,12 +3,15 @@
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { useRouter } from 'next/navigation';
 
 const MySwal = withReactContent(Swal);
 
 export default function Page() {
   const [items, setItems] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   const getUsers = async () => {
     try {
@@ -19,16 +22,24 @@ export default function Page() {
       }
       const data = await res.json();
       setItems(data);
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/Login'); // ถ้าไม่มี token → กลับไปหน้า Login
+      return;
+    }
+
     getUsers();
     const interval = setInterval(getUsers, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [router]);
 
   const handleSelect = (id) => {
     setSelectedIds((prev) =>
@@ -69,7 +80,6 @@ export default function Page() {
             })
           )
         );
-
         MySwal.fire('Deleted!', 'Selected users have been deleted.', 'success');
         setSelectedIds([]);
       } catch (err) {
@@ -98,6 +108,14 @@ export default function Page() {
       width: 600,
     });
   };
+
+  if (loading) {
+    return (
+      <div className="text-center">
+        <h1>Loading...</h1>
+      </div>
+    );
+  }
 
   return (
     <>
