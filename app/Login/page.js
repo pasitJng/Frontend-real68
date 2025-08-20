@@ -30,7 +30,8 @@ export default function Login() {
     }
 
     try {
-      const res = await fetch("http://itdev.cmtc.ac.th:3000/api/auth/login", {
+      // 🔹 เรียก API Route ของเราแทน
+      const res = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
@@ -39,7 +40,6 @@ export default function Login() {
       const data = await res.json();
 
       if (data.token) {
-        // ✅ เก็บ token
         if (rememberMe) {
           localStorage.setItem("token", data.token);
         } else {
@@ -85,7 +85,6 @@ export default function Login() {
                   Log In
                 </h2>
 
-                {/* Form */}
                 <form
                   noValidate
                   className={`needs-validation ${formValidated ? "was-validated" : ""}`}

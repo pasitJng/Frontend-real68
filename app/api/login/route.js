@@ -1,0 +1,25 @@
+// app/api/auth/login/route.js
+export async function POST(req) {
+  try {
+    const body = await req.json();
+
+    // ส่งต่อไปยัง API จริง
+    const response = await fetch("http://itdev.cmtc.ac.th:3000/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json();
+
+    return new Response(JSON.stringify(data), {
+      status: response.status,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ error: "Internal Server Error" }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+}
