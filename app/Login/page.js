@@ -12,66 +12,66 @@ export default function Login() {
   const [formValidated, setFormValidated] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const form = e.currentTarget;
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const form = e.currentTarget;
 
-    if (form.checkValidity() === false) {
-      e.stopPropagation();
-      setFormValidated(true);
+  if (form.checkValidity() === false) {
+    e.stopPropagation();
+    setFormValidated(true);
+    Swal.fire({
+      icon: 'warning',
+      title: 'Incomplete form',
+      text: 'Please fill in all required fields',
+      timer: 2000,
+      showConfirmButton: false,
+    });
+    return;
+  }
+
+  try {
+    // 🔹 เรียก API ให้ตรงกับโฟลเดอร์จริง
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
+
+    const data = await res.json();
+
+    if (data.token) {
+    localStorage.setItem('token', data.token);  
+
       Swal.fire({
-        icon: 'warning',
-        title: 'Incomplete form',
-        text: 'Please fill in all required fields',
+        icon: 'success',
+        title: 'Login successful',
+        text: 'Welcome!',
+        timer: 900,
+        showConfirmButton: false,
+      }).then(() => {
+        //router.push("/admin/users"); // ✅ redirect หลัง Swal ปิด
+        window.location.href= "/admin/users"; // ✅ redirect หลัง Swal ปิด
+      });
+
+    } else if (data.error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Login failed',
+        text: data.error,
         timer: 2000,
         showConfirmButton: false,
       });
-      return;
     }
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Server Error',
+      text: 'Unable to connect to server',
+    });
+  }
+  
+};
 
-    try {
-      // 🔹 เรียก API Route ของเราแทน
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
-
-      const data = await res.json();
-
-      if (data.token) {
-        if (rememberMe) {
-          localStorage.setItem("token", data.token);
-        } else {
-          sessionStorage.setItem("token", data.token);
-        }
-
-        Swal.fire({
-          icon: 'success',
-          title: 'Login successful',
-          text: 'Welcome!',
-          timer: 2000,
-          showConfirmButton: false,
-        });
-
-        router.push("/admin/users");
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Login failed',
-          text: 'Invalid username or password',
-          timer: 2000,
-          showConfirmButton: false,
-        });
-      }
-    } catch (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Server Error',
-        text: 'Unable to connect to server',
-      });
-    }
-  };
 
   return (
     <main>
