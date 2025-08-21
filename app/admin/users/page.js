@@ -69,7 +69,7 @@ export default function Page() {
 
     if (confirm.isConfirmed) {
       try {
-        await fetch(`http://itdev.cmtc.ac.th:3000/api/users/${id}`, {
+        await fetch(`https://backend-nextjs-virid.vercel.app/api/users/${id}`, {
           method: 'DELETE',
         });
         MySwal.fire('Deleted!', 'The user has been deleted.', 'success');

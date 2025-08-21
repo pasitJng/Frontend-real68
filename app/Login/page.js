@@ -67,7 +67,7 @@ const handleSubmit = async (e) => {
         icon: 'error',
         title: 'Login failed',
         text: data.error,
-        timer: 2000,
+        timer: 900,
         showConfirmButton: false,
       });
     }
