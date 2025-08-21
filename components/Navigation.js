@@ -9,12 +9,22 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState({ id: "", name: "" });
 
-  // ตรวจสอบว่า login แล้วหรือยัง
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
-  }, [pathname]);
+  // ตรวจสอบ token และโหลดข้อมูล user
+useEffect(() => {
+  const token = localStorage.getItem("token");
+  const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+
+  if (token && storedUser?.id) {
+    setIsLoggedIn(true);
+    setUser(storedUser);
+  } else {
+    setIsLoggedIn(false);
+  }
+}, [pathname]);
+
+
 
   // โหลด Bootstrap
   useEffect(() => {
@@ -33,7 +43,6 @@ export default function Navbar() {
         collapseInstance.hide();
       }
     };
-
     closeNavbar();
   }, [pathname]);
 
@@ -47,16 +56,16 @@ export default function Navbar() {
         navbar?.classList.remove("scrolled");
       }
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // ฟังก์ชัน Logout
   const handleLogout = () => {
-    localStorage.removeItem("token");  // ลบ token
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setIsLoggedIn(false);
-    router.push("/Login"); // redirect ไปหน้า Login
+    router.push("/Login");
   };
 
   return (
@@ -98,15 +107,39 @@ export default function Navbar() {
             ))}
           </ul>
 
-          {/* ถ้า login แล้วให้แสดง Logout */}
+          {/* ถ้า login แล้วให้โชว์ User Dropdown */}
           {isLoggedIn ? (
-            <button
-              onClick={handleLogout}
-              className="btn-login-custom rounded-pill px-4 py-2 fw-bold d-flex align-items-center mx-auto mx-lg-0"
-            >
-              <i className="bi bi-box-arrow-right me-2"></i>
-              Logout
-            </button>
+            <div className="dropdown ms-lg-3 mt-3 mt-lg-0 text-center text-lg-end">
+              <button
+                className="btn btn-dark rounded-circle d-flex align-items-center justify-content-center mx-auto mx-lg-0"
+                id="userDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                style={{ width: "45px", height: "45px" }}
+              >
+                <i className="bi bi-person-fill text-white fs-5"></i>
+              </button>
+              <ul
+                className="dropdown-menu dropdown-menu-end dropdown-menu-custom shadow-lg border-0 rounded-3 p-2"
+                aria-labelledby="userDropdown"
+              >
+                <li className="px-3 py-2 text-center text-lg-start">
+                  <p className="mb-1 fw-bold text-danger">
+                    <i className="bi bi-person-circle me-2"></i>{user.name || "Guest"}
+                  </p>
+                  <p className="mb-0 text-muted small">ID: {user.id || "N/A"}</p>
+                </li>
+                <li><hr className="dropdown-divider" /></li>
+                <li>
+                  <button
+                    className="dropdown-item text-danger fw-bold d-flex align-items-center justify-content-center justify-content-lg-start"
+                    onClick={handleLogout}
+                  >
+                    <i className="bi bi-box-arrow-right me-2"></i> Logout
+                  </button>
+                </li>
+              </ul>
+            </div>
           ) : (
             <Link
               href="/Login"
@@ -118,8 +151,22 @@ export default function Navbar() {
               </button>
             </Link>
           )}
+
         </div>
       </div>
+        <style jsx>{`
+              /* ทำให้ dropdown อยู่กลางเมื่อเป็นจอเล็ก */
+                @media (max-width: 991px) {
+                  .dropdown-menu-custom {
+                    left: 50% !important;
+                    right: auto !important;
+                    transform: translateX(-50%) !important;
+                    text-align: center;
+                    min-width: 220px;
+                  }
+                }
+
+      `}</style>
     </nav>
   );
 }

@@ -40,18 +40,27 @@ const handleSubmit = async (e) => {
     const data = await res.json();
 
     if (data.token) {
-    localStorage.setItem('token', data.token);  
+  // เก็บ token
+  localStorage.setItem('token', data.token);
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Login successful',
-        text: 'Welcome!',
-        timer: 900,
-        showConfirmButton: false,
-      }).then(() => {
-        //router.push("/admin/users"); // ✅ redirect หลัง Swal ปิด
-        window.location.href= "/admin/users"; // ✅ redirect หลัง Swal ปิด
-      });
+  // เก็บ user (id + name) ไว้ใช้ใน Navbar
+  if (data.user) {
+    localStorage.setItem('user', JSON.stringify({
+      id: data.user.id,
+      name: data.user.username
+    }));
+  }
+
+  Swal.fire({
+    icon: 'success',
+    title: 'Login successful',
+    text: 'Welcome!',
+    timer: 900,
+    showConfirmButton: false,
+  }).then(() => {
+    window.location.href = "/admin/users"; 
+  });
+} else if (data.error === "Invalid username or password") {
 
     } else if (data.error) {
       Swal.fire({
@@ -70,6 +79,22 @@ const handleSubmit = async (e) => {
     });
   }
   
+};
+
+const handleLogin = async () => {
+  try {
+    // ... เรียก API ตรวจสอบ username/password
+    const token = "example_token";
+    const userData = { id: "U001", name: "Pasit" }; // ดึงมาจาก API
+
+    // เก็บ token + user ลง localStorage
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(userData));
+
+    router.push("/"); // redirect ไปหน้าแรก
+  } catch (error) {
+    console.error("Login failed", error);
+  }
 };
 
 

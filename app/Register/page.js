@@ -48,7 +48,7 @@ export default function Register() {
     setValidated(true);
 
     try {
-      const response = await fetch("http://itdev.cmtc.ac.th:3000/api/users", {
+      const response = await fetch("https://backend-nextjs-virid.vercel.app/api/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

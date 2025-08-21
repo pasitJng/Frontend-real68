@@ -4,7 +4,7 @@ export async function POST(req) {
     const body = await req.json();
 
     // ส่งต่อไปยัง API จริง
-    const response = await fetch("http://itdev.cmtc.ac.th:3000/api/auth/login", {
+    const response = await fetch("https://backend-nextjs-virid.vercel.app/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),

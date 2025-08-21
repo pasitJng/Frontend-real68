@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const res = await fetch("http://itdev.cmtc.ac.th:3000/api/users", {
+    const res = await fetch("https://backend-nextjs-virid.vercel.app/api/users", {
       cache: "no-store", // ป้องกันการ cache
     });
 
@@ -29,7 +29,7 @@ export async function DELETE(request) {
       return NextResponse.json({ error: "User ID is required" }, { status: 400 });
     }
 
-    const res = await fetch(`http://itdev.cmtc.ac.th:3000/api/users/${id}`, {
+    const res = await fetch(`https://backend-nextjs-virid.vercel.app/api/users/${id}`, {
       method: "DELETE",
     });
 
