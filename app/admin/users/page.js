@@ -57,39 +57,12 @@ export default function Page() {
   };
 
   const handleDeleteOne = async (id) => {
-    const confirm = await MySwal.fire({
-      title: 'Confirm Delete',
-      text: 'Are you sure you want to delete this user?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#dc3545',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: '<i class="bi bi-trash"></i> Delete',
-    });
-
-    if (confirm.isConfirmed) {
-      try {
-        await fetch(`https://backend-nextjs-virid.vercel.app/api/users/${id}`, {
-          method: 'DELETE',
-        });
-        MySwal.fire('Deleted!', 'The user has been deleted.', 'success');
-        getUsers();
-      } catch (err) {
-        console.error('Delete error:', err);
-        MySwal.fire('Error', 'Failed to delete user.', 'error');
-      }
-    }
-  };
-
-  const deleteSelected = async () => {
-    if (selectedIds.length === 0) {
-      MySwal.fire('No Selection', 'Please select users to delete.', 'info');
-      return;
-    }
+    // ถ้ามี selectedIds อยู่แล้ว ให้ลบทั้งหมด ไม่งั้นลบเฉพาะ id ที่กด
+    const idsToDelete = selectedIds.length > 0 ? selectedIds : [id];
 
     const confirm = await MySwal.fire({
       title: 'Confirm Delete',
-      html: `<span style="font-size:1.1rem;">You are about to delete <b>${selectedIds.length}</b> user(s).</span>`,
+      html: `<span style="font-size:1.1rem;">You are about to delete <b>${idsToDelete.length}</b> user(s).</span>`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
@@ -100,14 +73,15 @@ export default function Page() {
     if (confirm.isConfirmed) {
       try {
         await Promise.all(
-          selectedIds.map((id) =>
-            fetch(`http://itdev.cmtc.ac.th:3000/api/users/${id}`, {
+          idsToDelete.map((uid) =>
+            fetch(`https://backend-nextjs-virid.vercel.app/api/users/${uid}`, {
               method: 'DELETE',
             })
           )
         );
         MySwal.fire('Deleted!', 'Selected users have been deleted.', 'success');
         setSelectedIds([]);
+        getUsers();
       } catch (err) {
         console.error('Delete error:', err);
         MySwal.fire('Error', 'Failed to delete users.', 'error');
@@ -163,12 +137,6 @@ export default function Page() {
               >
                 <i className="bi bi-check2-square me-1"></i>
                 {selectedIds.length === items.length ? 'Deselect All' : 'Select All'}
-              </button>
-              <button
-                className="btn btn-danger btn-sm delete-btn"
-                onClick={deleteSelected}
-              >
-                <i className="bi bi-trash me-1"></i> Delete
               </button>
             </div>
           </div>
@@ -276,22 +244,6 @@ export default function Page() {
         }
         .action-btn:hover {
           box-shadow: 0 4px 10px rgba(220, 53, 69, 0.25);
-        }
-
-        /* Responsive Fix */
-        @media (max-width: 768px) {
-          .card-header {
-            flex-direction: column !important;
-            align-items: flex-start !important;
-          }
-          table th, table td {
-            font-size: 0.85rem;
-            padding: 6px;
-          }
-          .action-btn {
-            width: 28px;
-            height: 28px;
-          }
         }
       `}</style>
     </>

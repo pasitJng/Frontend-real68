@@ -14,54 +14,64 @@ export default function EditUser() {
   const [lastname, setLastname] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [address, setAddress] = useState('');
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
+  // ✅ ดึงข้อมูล user
+  useEffect(() => {
     async function getUsers() {
-        try {
-        const res = await fetch(`https://backend-nextjs-virid.vercel.app/api/users/${id}`);
+      try {
+        setLoading(true);
+        const res = await fetch(`/api/edit?id=${id}`); // ← ใช้ API Route ของเรา
         if (!res.ok) {
-            console.error('Failed to fetch data');
-            return;
+          console.error('Failed to fetch data');
+          setLoading(false);
+          return;
         }
         const data = await res.json();
         setItems(data);
 
-        // ✅ ตั้งค่าเริ่มต้นใน state
         if (data.length > 0) {
-            const user = data[0];
-            setFirstname(user.firstname || '');
-            setFullname(user.fullname || '');
-            setLastname(user.lastname || '');
-            setUsername(user.username || '');
-            setPassword(user.password || '');
+          const user = data[0];
+          setFirstname(user.firstname || '');
+          setFullname(user.fullname || '');
+          setLastname(user.lastname || '');
+          setUsername(user.username || '');
+          setPassword(user.password || '');
+          setAddress(user.address || '');
         }
-
-        } catch (error) {
+      } catch (error) {
         console.error('Error fetching data:', error);
-        }
+      } finally {
+        setLoading(false);
+      }
     }
 
-    getUsers();
-    }, [id]); // เพิ่ม id เป็น dependency
+    if (id) getUsers();
+  }, [id]);
 
+  // ✅ อัปเดตข้อมูล user
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('https://backend-nextjs-virid.vercel.app/api/users', {
+      const res = await fetch('/api/edit', {
         method: 'PUT',
         headers: {
-          Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id, firstname, fullname, lastname, username, password }),
+        body: JSON.stringify({ id, firstname, fullname, lastname, username, password, address }),
       });
+
       const result = await res.json();
+
       if (res.ok) {
         Swal.fire({
           icon: 'success',
           title: '<h3>Update Success!</h3>',
+          text: `Edit user ID: ${id} successfully.`,
           showConfirmButton: false,
           timer: 2000,
-        }).then(function () {
+        }).then(() => {
           router.push('/admin/users');
         });
 
@@ -70,10 +80,11 @@ export default function EditUser() {
         setLastname('');
         setUsername('');
         setPassword('');
+        setAddress('');
       } else {
         Swal.fire({
           title: 'Error!',
-          text: 'เกิดข้อผิดพลาด!',
+          text: result.error || 'เกิดข้อผิดพลาด!',
           icon: 'error',
           confirmButtonText: 'ตกลง',
         });
@@ -94,79 +105,100 @@ export default function EditUser() {
           <div className="card shadow-sm p-4 border-0">
             <h2 className="text-center mb-4 fw-bold text-danger">Edit User ID: {id}</h2>
 
-            {items.map((item) => (
-              <form key={item.id} onSubmit={handleUpdateSubmit} noValidate>
-                <div className="row">
-                  <div className="col-md-3 mb-3">
-                    <label className="form-label">Prefix</label>
-                    <select
-                      name="firstname"
-                      className="form-select"
-                      onChange={(e) => setFirstname(e.target.value)}
-                      required
-                      value={firstname}
-                    >
-                      <option value="">-- Select --</option>
-                      <option value="Mr.">Mr.</option>
-                      <option value="Mrs.">Mrs.</option>
-                      <option value="Ms.">Ms.</option>
-                    </select>
+            {/* ✅ Loading Animation */}
+            {loading ? (
+              <div className="d-flex justify-content-center align-items-center py-5">
+                <div className="spinner-border text-danger" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+                <span className="ms-3 fw-bold text-danger">Loading User Info...</span>
+              </div>
+            ) : (
+              items.map((item) => (
+                <form key={item.id} onSubmit={handleUpdateSubmit} noValidate>
+                  <div className="row">
+                    <div className="col-md-3 mb-3">
+                      <label className="form-label">Prefix</label>
+                      <select
+                        name="firstname"
+                        className="form-select"
+                        onChange={(e) => setFirstname(e.target.value)}
+                        required
+                        value={firstname}
+                      >
+                        <option value="">-- Select --</option>
+                        <option value="Mr.">Mr.</option>
+                        <option value="Mrs.">Mrs.</option>
+                        <option value="Ms.">Ms.</option>
+                      </select>
+                    </div>
+                    <div className="col-md-5 mb-3">
+                      <label className="form-label">First Name</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={fullname}
+                        onChange={(e) => setFullname(e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="col-md-4 mb-3">
+                      <label className="form-label">Last Name</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={lastname}
+                        onChange={(e) => setLastname(e.target.value)}
+                        required
+                      />
+                    </div>
                   </div>
-                  <div className="col-md-5 mb-3">
-                    <label className="form-label">First Name</label>
+
+                  <div className="mb-3">
+                    <label className="form-label">Username</label>
                     <input
                       type="text"
                       className="form-control"
-                      value={fullname}
-                      onChange={(e) => setFullname(e.target.value)}
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
                       required
                     />
                   </div>
-                  <div className="col-md-4 mb-3">
-                    <label className="form-label">Last Name</label>
+
+                  <div className="mb-3">
+                    <label className="form-label">Password</label>
                     <input
                       type="text"
                       className="form-control"
-                      value={lastname}
-                      onChange={(e) => setLastname(e.target.value)}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       required
                     />
                   </div>
-                </div>
 
-                <div className="mb-3">
-                  <label className="form-label">Username</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                  />
-                </div>
+                  <div className="mb-3">
+                    <label className="form-label">Address</label>
+                    <textarea
+                      type="text"
+                      className="form-control"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      required
+                    />
+                  </div>
 
-                <div className="mb-3">
-                  <label className="form-label">Password</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </div>
+                  <button type="submit" className="btn btn-danger w-100 fw-bold mt-3">
+                    Update
+                  </button>
 
-                <button type="submit" className="btn btn-danger w-100 fw-bold mt-3">
-                  Update
-                </button>
-
-                <div className="text-center mt-3">
-                  <a href="/admin/users" className="text-decoration-none text-secondary">
-                    &larr; Back to Register
-                  </a>
-                </div>
-              </form>
-            ))}
+                  <div className="text-center mt-3">
+                    <a href="/admin/users" className="text-decoration-none text-secondary">
+                      &larr; Back to Register
+                    </a>
+                  </div>
+                </form>
+              ))
+            )}
           </div>
         </div>
       </div>

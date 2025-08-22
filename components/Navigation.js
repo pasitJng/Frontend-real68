@@ -130,6 +130,17 @@ useEffect(() => {
                   <p className="mb-0 text-muted small">ID: {user.id || "N/A"}</p>
                 </li>
                 <li><hr className="dropdown-divider" /></li>
+            {/* ปุ่มไปที่ Dashboard */}
+                <li>
+                  <Link
+                    href="/admin/users"
+                    className="dropdown-item fw-bold d-flex align-items-center justify-content-center justify-content-lg-start"
+                  >
+                    <i className="bi bi-speedometer2 me-2"></i> Admin Dashboard
+                  </Link>
+                </li>
+
+
                 <li>
                   <button
                     className="dropdown-item text-danger fw-bold d-flex align-items-center justify-content-center justify-content-lg-start"
@@ -150,6 +161,8 @@ useEffect(() => {
                 Login
               </button>
             </Link>
+            
+          
           )}
 
         </div>
