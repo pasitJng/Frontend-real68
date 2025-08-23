@@ -57,7 +57,6 @@ export default function Page() {
   };
 
   const handleDeleteOne = async (id) => {
-    // ถ้ามี selectedIds อยู่แล้ว ให้ลบทั้งหมด ไม่งั้นลบเฉพาะ id ที่กด
     const idsToDelete = selectedIds.length > 0 ? selectedIds : [id];
 
     const confirm = await MySwal.fire({
@@ -94,156 +93,315 @@ export default function Page() {
       title: `<strong class="text-danger"><i class="bi bi-person-circle"></i> User Details</strong>`,
       html: `
         <div style="text-align: left; font-size: 1rem; line-height: 1.7;">
-          <p><i class="bi bi-person"></i> <strong>Username:</strong> ${item.username}</p>
-          <p><i class="bi bi-card-text"></i> <strong>Prefix:</strong> ${item.firstname}</p>
-          <p><i class="bi bi-person-bounding-box"></i> <strong>Firstname:</strong> ${item.fullname}</p>
-          <p><i class="bi bi-person-bounding-box"></i> <strong>Lastname:</strong> ${item.lastname}</p>
-          <p><i class="bi bi-key"></i> <strong>Password:</strong> ${item.password}</p>
-          <p><i class="bi bi-geo-alt"></i> <strong>Address:</strong> ${item.address}</p>
+          <p><i class="bi bi-person text-danger"></i> <strong>Username:</strong> ${item.username}</p>
+          <p><i class="bi bi-card-text text-danger"></i> <strong>Prefix:</strong> ${item.firstname}</p>
+          <p><i class="bi bi-person-bounding-box text-danger"></i> <strong>Firstname:</strong> ${item.fullname}</p>
+          <p><i class="bi bi-person-bounding-box text-danger"></i> <strong>Lastname:</strong> ${item.lastname}</p>
+          <p><i class="bi bi-key text-danger"></i> <strong>Password:</strong> ${item.password}</p>
+          <p><i class="bi bi-geo-alt text-danger"></i> <strong>Address:</strong> ${item.address}</p>
         </div>
       `,
-      background: '#fff',
+      background: '#ffffff',
       showCloseButton: true,
       showConfirmButton: false,
       width: '90%',
       customClass: {
-        popup: 'responsive-popup'
+        popup: 'responsive-popup border border-danger'
       }
     });
   };
 
   if (loading) {
     return (
-      <div className="text-center p-5">
-        <div className="spinner-border text-danger" role="status"></div>
-        <p className="mt-3 fw-semibold">Loading users...</p>
+      <div className="min-vh-100 d-flex align-items-center justify-content-center" style={{background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)'}}>
+        <div className="text-center">
+          <div className="spinner-border text-danger mb-3" role="status" style={{width: '3rem', height: '3rem'}}></div>
+          <p className="fw-bold text-dark fs-5">Loading Dashboard...</p>
+        </div>
       </div>
     );
   }
 
   return (
     <>
-      <div className="container mt-5">
-        <div className="card border-0 shadow-lg">
-          {/* Header */}
-          <div className="card-header bg-dark text-white d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
-            <span className="fw-bold fs-5">
-              <i className="bi bi-people-fill me-2"></i> Users List
-            </span>
-            <div className="d-flex flex-wrap gap-2">
-              <button
-                className="btn btn-outline-light btn-sm"
-                onClick={handleSelectAll}
-              >
-                <i className="bi bi-check2-square me-1"></i>
-                {selectedIds.length === items.length ? 'Deselect All' : 'Select All'}
-              </button>
+      <div className="min-vh-100" style={{background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)'}}>
+        {/* Header Section */}
+        <div className="bg-dark text-white py-4 shadow-sm">
+          <div className="container">
+            <div className="row align-items-center">
+              <div className="col-md-8">
+                <h1 className="h3 mb-0 fw-bold">
+                  <i className="bi bi-speedometer2 text-danger me-2"></i>
+                  Admin Dashboard
+                </h1>
+                <p className="mb-0 text-light opacity-75">
+                  <i className="bi bi-people me-1"></i>
+                  Manage your users efficiently
+                </p>
+              </div>
+              <div className="col-md-4 text-md-end mt-3 mt-md-0">
+                <span className="badge bg-danger fs-6 px-3 py-2">
+                  <i className="bi bi-person-check me-1"></i>
+                  {items.length} Total Users
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="container py-5">
+          {/* Stats Cards */}
+          <div className="row mb-4">
+            <div className="col-md-4 mb-3">
+              <div className="card border-0 shadow-sm h-100 bg-white">
+                <div className="card-body text-center">
+                  <div className="text-danger mb-2">
+                    <i className="bi bi-people-fill" style={{fontSize: '2.5rem'}}></i>
+                  </div>
+                  <h5 className="card-title text-dark fw-bold">{items.length}</h5>
+                  <p className="card-text text-muted small">Total Users</p>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4 mb-3">
+              <div className="card border-0 shadow-sm h-100 bg-white">
+                <div className="card-body text-center">
+                  <div className="text-danger mb-2">
+                    <i className="bi bi-check2-square" style={{fontSize: '2.5rem'}}></i>
+                  </div>
+                  <h5 className="card-title text-dark fw-bold">{selectedIds.length}</h5>
+                  <p className="card-text text-muted small">Selected Users</p>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4 mb-3">
+              <div className="card border-0 shadow-sm h-100 bg-white">
+                <div className="card-body text-center">
+                  <div className="text-danger mb-2">
+                    <i className="bi bi-shield-check" style={{fontSize: '2.5rem'}}></i>
+                  </div>
+                  <h5 className="card-title text-dark fw-bold">Active</h5>
+                  <p className="card-text text-muted small">System Status</p>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Table */}
-          <div className="card-body bg-white">
-            <div className="table-responsive">
-              <table className="table table-hover text-center align-middle">
-                <thead className="table-dark">
-                  <tr>
-                    <th style={{ width: '5%' }}>
-                      <input
-                        type="checkbox"
-                        className="form-check-input checkbox-red"
-                        onChange={handleSelectAll}
-                        checked={items.length > 0 && selectedIds.length === items.length}
-                      />
-                    </th>
-                    <th style={{ width: '10%' }}>#</th>
-                    <th style={{ width: '45%' }}>Username</th>
-                    <th style={{ width: '40%' }}>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {items.map((item, index) => (
-                    <tr key={item.id}>
-                      <td>
+          {/* Main Data Table */}
+          <div className="card border-0 shadow-lg bg-white">
+            {/* Table Header */}
+            <div className="card-header bg-gradient" style={{background: 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)'}}>
+              <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+                <div className="text-white">
+                  <h5 className="mb-1 fw-bold">
+                    <i className="bi bi-table me-2"></i>
+                    Users Management
+                  </h5>
+                  <small className="opacity-75">Manage and monitor user accounts</small>
+                </div>
+                <div className="d-flex flex-wrap gap-2">
+                  {selectedIds.length > 0 && (
+                    <button
+                      className="btn btn-outline-light btn-sm fw-bold shadow-sm"
+                      onClick={() => handleDeleteOne(selectedIds[0])}
+                      style={{borderRadius: '25px'}}
+                    >
+                      <i className="bi bi-trash me-1"></i>
+                      Delete Selected ({selectedIds.length})
+                    </button>
+                  )}
+
+                  <button
+                    className="btn btn-light btn-sm fw-bold shadow-sm"
+                    onClick={handleSelectAll}
+                    style={{borderRadius: '25px'}}
+                  >
+                    <i className="bi bi-check-all me-1 text-danger"></i>
+                    {selectedIds.length === items.length ? 'Deselect All' : 'Select All'}
+                  </button>
+                  
+                </div>
+              </div>
+            </div>
+
+            {/* Table Content */}
+            <div className="card-body p-0">
+              <div className="table-responsive">
+                <table className="table table-hover mb-0 align-middle">
+                  <thead className="table-dark">
+                    <tr>
+                      <th className="text-center" style={{ width: '5%' }}>
                         <input
                           type="checkbox"
                           className="form-check-input checkbox-red"
-                          checked={selectedIds.includes(item.id)}
-                          onChange={() => handleSelect(item.id)}
+                          onChange={handleSelectAll}
+                          checked={items.length > 0 && selectedIds.length === items.length}
                         />
-                      </td>
-                      <td>
-                        <span className="badge bg-secondary">{index + 1}/ {item.id}</span>
-                      </td>
-                      <td className="text-capitalize fw-semibold">
-                        <i className="bi bi-person-circle me-1"></i> {item.username}
-                      </td>
-                      <td>
-                        <div className="btn-group" role="group">
-                          {/* View Button */}
-                          <button
-                            className="btn btn-outline-warning btn-sm action-btn"
-                            onClick={() => showUserDetail(item)}
-                            title="View Details"
-                          >
-                            <i className="bi bi-eye"></i>
-                          </button>
-
-                          {/* Edit Button */}
-                          <a
-                            href={`/admin/users/edit/${item.id}`}
-                            className="btn btn-outline-danger btn-sm action-btn"
-                            title="Edit User"
-                          >
-                            <i className="bi bi-pencil-square"></i>
-                          </a>
-
-                          {/* Delete Button */}
-                          <button
-                            className="btn btn-outline-secondary btn-sm action-btn"
-                            onClick={() => handleDeleteOne(item.id)}
-                            title="Delete User"
-                          >
-                            <i className="bi bi-trash"></i>
-                          </button>
-                        </div>
-                      </td>
+                      </th>
+                      <th className="text-center" style={{ width: '10%' }}>
+                        <i className="bi bi-hash me-1"></i>ID
+                      </th>
+                      <th style={{ width: '45%' }}>
+                        <i className="bi bi-person me-1"></i>Username
+                      </th>
+                      <th className="text-center" style={{ width: '40%' }}>
+                        <i className="bi bi-gear me-1"></i>Actions
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {items.map((item, index) => (
+                      <tr key={item.id} className="table-row-hover">
+                        <td className="text-center">
+                          <input
+                            type="checkbox"
+                            className="form-check-input checkbox-red"
+                            checked={selectedIds.includes(item.id)}
+                            onChange={() => handleSelect(item.id)}
+                          />
+                        </td>
+                        <td className="text-center">
+                          <span className="badge bg-light text-dark border fw-bold">
+                            {index + 1} / {item.id}
+                          </span>
+                        </td>
+                        <td>
+                          <div className="d-flex align-items-center">
+                            <div className="avatar-circle me-3">
+                              <i className="bi bi-person-fill text-white"></i>
+                            </div>
+                            <div>
+                              <div className="fw-bold text-dark">{item.username}</div>
+                              <small className="text-muted">User Account</small>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="text-center">
+                          <div className="btn-group shadow-sm" role="group">
+                            <button
+                              className="btn btn-outline-info btn-sm action-btn"
+                              onClick={() => showUserDetail(item)}
+                              title="View Details"
+                            >
+                              <i className="bi bi-eye"></i>
+                            </button>
+                            <a
+                              href={`/admin/users/edit/${item.id}`}
+                              className="btn btn-outline-warning btn-sm action-btn"
+                              title="Edit User"
+                            >
+                              <i className="bi bi-pencil-square"></i>
+                            </a>
+                            <button
+                              className="btn btn-outline-danger btn-sm action-btn"
+                              onClick={() => handleDeleteOne(item.id)}
+                              title="Delete User"
+                            >
+                              <i className="bi bi-trash"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="card-footer bg-light text-center py-3">
+              <small className="text-muted">
+                <i className="bi bi-info-circle me-1"></i>
+                Total {items.length} users found | {selectedIds.length} selected
+              </small>
             </div>
           </div>
         </div>
       </div>
 
       <style jsx>{`
-        .delete-btn {
-          border-radius: 20px;
-          padding: 5px 15px;
-          font-weight: 500;
-          transition: all 0.3s ease;
-        }
-        .delete-btn:hover {
-          transform: scale(1.05);
-          box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
-        }
-        .table tbody tr:hover {
-          background-color: rgba(220, 53, 69, 0.05);
-        }
         .checkbox-red:checked {
           accent-color: #dc3545;
+          border-color: #dc3545;
         }
+
         .action-btn {
-          border-radius: 50%;
-          width: 34px;
-          height: 34px;
+          border-radius: 8px;
+          width: 38px;
+          height: 38px;
           display: flex;
           align-items: center;
           justify-content: center;
           transition: all 0.3s ease;
+          font-weight: 500;
         }
+
         .action-btn:hover {
-          box-shadow: 0 4px 10px rgba(220, 53, 69, 0.25);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .table-row-hover:hover {
+          background-color: rgba(220, 53, 69, 0.05);
+          transition: background-color 0.3s ease;
+        }
+
+        .avatar-circle {
+          width: 40px;
+          height: 40px;
+          background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.2rem;
+        }
+
+        .card {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+          transform: translateY(-2px);
+        }
+
+        .bg-gradient {
+          background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+        }
+
+        .btn-group .btn {
+          border-radius: 8px !important;
+          margin: 0 1px;
+        }
+
+        .table thead th {
+          border: none;
+          font-weight: 600;
+          letter-spacing: 0.5px;
+          font-size: 0.9rem;
+        }
+
+        .table tbody td {
+          border-color: #f8f9fa;
+          padding: 1rem 0.75rem;
+        }
+
+        .badge {
+          font-size: 0.8rem;
+          padding: 0.4em 0.8em;
+        }
+
+        @media (max-width: 768px) {
+          .btn-group {
+            flex-direction: column;
+            width: 100%;
+          }
+          
+          .action-btn {
+            width: 100%;
+            border-radius: 4px !important;
+            margin: 1px 0 !important;
+          }
         }
       `}</style>
     </>

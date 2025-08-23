@@ -16,17 +16,17 @@ const prompt = Prompt({
 });
 
 export default function RootLayout({ children }) {
-    const [alertVisible, setAlertVisible] = useState(false); //*ปิดใช้งาน Alert ให้พิมพ์ false*
-  
-    const handleClose = () => {
-      setAlertVisible(false);
-    };
+  const [alertVisible, setAlertVisible] = useState(false); //*ปิดใช้งาน Alert ให้พิมพ์ false*
+
+  const handleClose = () => {
+    setAlertVisible(false);
+  };
 
   return (
     <html lang="en">
-      <body className={`d-flex flex-column min-vh-100 ${prompt.className}`}>
-      <div style={{ marginTop: "70px" }}>
-      </div>
+      <body className={`d-flex flex-column min-vh-100 ${prompt.className}`} style={{ scrollBehavior: "smooth" }}>
+        <div style={{ marginTop: "70px" }}></div>
+        
         <Navigation />
 
         {/* ✅ AlertModal จะแสดงในทุกหน้า */}

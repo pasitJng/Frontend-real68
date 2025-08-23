@@ -99,7 +99,7 @@ const handleLogin = async () => {
 
 
   return (
-    <main>
+    <main >
       <BannerNotice />
       <div className="px-3 py-5">
         <div className="container px-3">

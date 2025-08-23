@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Link from 'next/link';
 
 export default function Contact() {
-  const videoList = ['/image/Card/TricoloreHero.mp4', '/image/Card/PanigaleV2.mp4'];
+  const videoList = ['/image/Card/TricoloreHero.mp4'];
   const [currentIndex, setCurrentIndex] = useState(0);
   const videoRef = useRef(null);
   const sourceRef = useRef(null);
@@ -62,7 +62,7 @@ export default function Contact() {
       </video>
 
       {/* UI Content */}
-      <div className="container-fluid position-relative z-1 text-white px-3">
+      <div className="container-fluid position-relative z-1 text-white px-3 py-5">
         <div className="row justify-content-center">
           <div className="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
             <Card
@@ -75,7 +75,13 @@ export default function Contact() {
                 fontFamily: "'Prompt', sans-serif",
               }}
             >
-              <h1 className="fw-bold text-danger mb-4 display-6">
+              <h1
+                className="fw-bold text-danger mb-4"
+                style={{
+                  fontSize: 'clamp(1.5rem, 4vw, 2.2rem)',
+                  lineHeight: 1.3,
+                }}
+              >
                 Visit Ducati Official Website
               </h1>
 
@@ -84,12 +90,13 @@ export default function Contact() {
                   type="primary"
                   size="large"
                   icon={<GlobalOutlined />}
-                  className="rounded-pill px-5 py-2 shadow-sm"
+                  className="rounded-pill w-100 w-sm-auto shadow-sm"
                   style={{
                     backgroundColor: '#d90429',
                     borderColor: '#d90429',
-                    fontSize: '18px',
+                    fontSize: 'clamp(14px, 2vw, 18px)',
                     fontFamily: "'Prompt', sans-serif",
+                    padding: '10px 20px',
                     transition: 'all 0.3s ease-in-out',
                   }}
                   onMouseOver={(e) => {
@@ -107,7 +114,13 @@ export default function Contact() {
 
               <Divider className="mt-5" />
 
-              <p className="text-muted small mb-0">
+              <p
+                className="text-muted mb-0"
+                style={{
+                  fontSize: 'clamp(10px, 1.6vw, 13px)',
+                  lineHeight: 1.5,
+                }}
+              >
                 *เว็บไซต์นี้จัดทำขึ้นเพื่อการศึกษาและโปรเจกต์ส่วนตัวเท่านั้น<br />
                 Ducati และ Ducati Panigale เป็นเครื่องหมายการค้าและลิขสิทธิ์ของ Ducati Motor Holding S.p.A. © All rights reserved.
               </p>

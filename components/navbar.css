@@ -2,19 +2,19 @@
   background-color: rgb(0, 0, 0);
   backdrop-filter: none;
   transition: all 0.4s ease;
-  z-index: 5;
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
 }
 
 .navbar.scrolled {
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(0, 0, 0, 0.459);
   backdrop-filter: blur(1px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
 }
 
 .nav-link {
-  color: #e0e0e0 !important;
+  color: 
+#e0e0e0 !important;
   transition: all 0.3s ease;
   font-weight: 500;
   padding: 0.5rem 1rem;
@@ -22,18 +22,21 @@
 }
 
 .nav-link:hover {
-  color: #ff4d4d !important;
+  color: 
+#ff4d4d !important;
   background-color: rgba(255, 255, 255, 0.08) !important;
 }
 
 .nav-link.active {
-  color: #ff4d4d !important;
+  color: 
+#ff4d4d !important;
   background-color: rgba(255, 255, 255, 0.12) !important;
   font-weight: bold;
 }
 
 .btn-login-custom {
-  background-color: #ff4d4d;
+  background-color: 
+#ff4d4d;
   color: white;
   border: none;
   transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
@@ -42,7 +45,8 @@
 }
 
 .btn-login-custom:hover {
-  background-color: #e60000;
+  background-color: 
+#e60000;
   transform: scale(1.05);
   box-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
 }
