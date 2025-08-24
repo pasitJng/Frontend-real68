@@ -102,7 +102,7 @@ body {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 110vh;
+  height: 100vh;
   object-fit: cover; /* ครอบเต็มจอโดยไม่เสียอัตราส่วน */
   z-index: 0; /* ด้านหลัง content ทุกตัว */
   pointer-events: none; /* ไม่รบกวนคลิก */
@@ -112,7 +112,7 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  height: 107.4%;
+  height: 107.95%;
   background: linear-gradient(
     135deg,
     rgba(0, 0, 0, 0.8) 0%,
