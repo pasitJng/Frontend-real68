@@ -1,5 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 export default function About() {
   const [isVisible, setIsVisible] = useState({});
@@ -49,11 +52,7 @@ export default function About() {
 
   return (
     <>
-      {/* Bootstrap CSS */}
-      <link 
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
-        rel="stylesheet"
-      />
+
       
       <style jsx>{`
         /* Global Reset & Hero Section */
