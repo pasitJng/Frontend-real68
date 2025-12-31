@@ -39,17 +39,21 @@ const handleSubmit = async (e) => {
 
     const data = await res.json();
 
+    console.log("Response from API:", data);
+
     if (data.token) {
   // เก็บ token
   localStorage.setItem('token', data.token);
 
   // เก็บ user (id + name) ไว้ใช้ใน Navbar
-  if (data.user) {
-    localStorage.setItem('user', JSON.stringify({
-      id: data.user.id,
-      name: data.user.username
-    }));
-  }
+const userData = {
+        id: data.user?.id || data.user?.UID || "N/A",
+        name: data.user?.username || data.user?.fullname || username // ถ้าไม่มีชื่อส่งมา ให้ใช้ username ที่พิมพ์ล็อกอิน
+      };
+
+      localStorage.setItem('user', JSON.stringify(userData));
+      
+      console.log("✅ บันทึกสำเร็จ:", localStorage.getItem('user'));
 
   Swal.fire({
     icon: 'success',
@@ -81,21 +85,6 @@ const handleSubmit = async (e) => {
   
 };
 
-const handleLogin = async () => {
-  try {
-    // ... เรียก API ตรวจสอบ username/password
-    const token = "example_token";
-    const userData = { id: "U001", name: "Pasit" }; // ดึงมาจาก API
-
-    // เก็บ token + user ลง localStorage
-    localStorage.setItem("token", token);
-    localStorage.setItem("user", JSON.stringify(userData));
-
-    router.push("/"); // redirect ไปหน้าแรก
-  } catch (error) {
-    console.error("Login failed", error);
-  }
-};
 
 
   return (

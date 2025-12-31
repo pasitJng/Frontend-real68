@@ -9,8 +9,8 @@ export default function Register() {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
+    prefix: '',
     firstname: '',
-    fullname: '',
     lastname: '',
     address: '',
     gender: '',
@@ -48,7 +48,7 @@ export default function Register() {
     setValidated(true);
 
     try {
-      const response = await fetch("https://backend-nextjs-virid.vercel.app/api/users", {
+      const response = await fetch("https://backend-real68.vercel.app/api/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -79,8 +79,8 @@ export default function Register() {
       setFormData({
         username: '',
         password: '',
+        prefix: '',
         firstname: '',
-        fullname: '',
         lastname: '',
         address: '',
         gender: '',
@@ -165,8 +165,8 @@ export default function Register() {
                     <label className="form-label">Prefix</label>
                     <select
                       className="form-select"
-                      name="firstname"
-                      value={formData.firstname}
+                      name="prefix"
+                      value={formData.prefix}
                       onChange={handleChange}
                       required
                     >
@@ -182,8 +182,8 @@ export default function Register() {
                     <input
                       type="text"
                       className="form-control"
-                      name="fullname"
-                      value={formData.fullname}
+                      name="firstname"
+                      value={formData.firstname}
                       onChange={handleChange}
                       required
                     />

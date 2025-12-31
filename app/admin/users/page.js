@@ -14,34 +14,40 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const getUsers = async () => {
-    try {
-      const res = await fetch('/api/users', { cache: 'no-store' });
-      if (!res.ok) {
-        console.error('Failed to fetch data');
-        return;
+const getUsers = async (isInitial = false) => {
+  try {
+    // ให้แสดงหน้า Loading เฉพาะตอนเข้าหน้าเว็บครั้งแรกเท่านั้น
+    if (isInitial) setLoading(true); 
+    
+    const token = localStorage.getItem('token'); 
+    const res = await fetch('https://backend-real68.vercel.app/api/users', {
+      headers: {
+        'Authorization': `Bearer ${token}`, // สำคัญมาก: ต้องมี Bearer นำหน้า
+        'Content-Type': 'application/json'
       }
+    });
+
+    if (res.ok) {
       const data = await res.json();
+      console.log("Data from API:", data[0]);
       setItems(data);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setLoading(false);
     }
-  };
+  } catch (error) {
+    console.error('Error:', error);
+  } finally {
+    setLoading(false); // ปิด loading เมื่อเสร็จสิ้น
+  }
+};
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      router.push('/Login');
-      return;
-    }
+useEffect(() => {
+  const token = localStorage.getItem('token');
+  if (!token) { router.push('/Login'); return; }
 
-    getUsers();
-    const interval = setInterval(getUsers, 1000);
-    return () => clearInterval(interval);
-  }, [router]);
-
+  getUsers(true); // ส่ง true เพื่อให้แสดง loading ในครั้งแรก
+  
+  const interval = setInterval(() => getUsers(false), 5000); // ดึงข้อมูลทุก 5 วินาที (ไม่ต้องโชว์ loading)
+  return () => clearInterval(interval);
+}, [router]);
   const handleSelect = (id) => {
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
@@ -56,7 +62,7 @@ export default function Page() {
     }
   };
 
-  const handleDeleteOne = async (id) => {
+const handleDeleteOne = async (id) => {
     const idsToDelete = selectedIds.length > 0 ? selectedIds : [id];
 
     const confirm = await MySwal.fire({
@@ -70,17 +76,24 @@ export default function Page() {
     });
 
     if (confirm.isConfirmed) {
+      const token = localStorage.getItem("token");
+
       try {
         await Promise.all(
           idsToDelete.map((uid) =>
-            fetch(`https://backend-nextjs-virid.vercel.app/api/users/${uid}`, {
+            fetch(`/api/users?id=${uid}`, {
               method: 'DELETE',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              }
             })
           )
         );
+
         MySwal.fire('Deleted!', 'Selected users have been deleted.', 'success');
         setSelectedIds([]);
-        getUsers();
+        getUsers(); // โหลดข้อมูลใหม่หลังจากลบสำเร็จ
       } catch (err) {
         console.error('Delete error:', err);
         MySwal.fire('Error', 'Failed to delete users.', 'error');
@@ -94,8 +107,8 @@ export default function Page() {
       html: `
         <div style="text-align: left; font-size: 1rem; line-height: 1.7;">
           <p><i class="bi bi-person text-danger"></i> <strong>Username:</strong> ${item.username}</p>
-          <p><i class="bi bi-card-text text-danger"></i> <strong>Prefix:</strong> ${item.firstname}</p>
-          <p><i class="bi bi-person-bounding-box text-danger"></i> <strong>Firstname:</strong> ${item.fullname}</p>
+          <p><i class="bi bi-card-text text-danger"></i> <strong>Prefix:</strong> ${item.prefix}</p>
+          <p><i class="bi bi-person-bounding-box text-danger"></i> <strong>Firstname:</strong> ${item.firstname}</p>
           <p><i class="bi bi-person-bounding-box text-danger"></i> <strong>Lastname:</strong> ${item.lastname}</p>
           <p><i class="bi bi-key text-danger"></i> <strong>Password:</strong> ${item.password}</p>
           <p><i class="bi bi-geo-alt text-danger"></i> <strong>Address:</strong> ${item.address}</p>
@@ -104,7 +117,7 @@ export default function Page() {
       background: '#ffffff',
       showCloseButton: true,
       showConfirmButton: false,
-      width: '90%',
+      width: '30%',
       customClass: {
         popup: 'responsive-popup border border-danger'
       }

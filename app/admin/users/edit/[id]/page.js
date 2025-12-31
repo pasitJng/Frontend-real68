@@ -8,9 +8,8 @@ export default function EditUser() {
   const params = useParams();
   const id = params.id;
 
-  const [items, setItems] = useState([]);
+  const [prefix, setPrefix] = useState('');
   const [firstname, setFirstname] = useState('');
-  const [fullname, setFullname] = useState('');
   const [lastname, setLastname] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -22,22 +21,28 @@ export default function EditUser() {
     async function getUsers() {
       try {
         setLoading(true);
-        const res = await fetch(`/api/edit?id=${id}`); // ← ใช้ API Route ของเรา
+        const token = localStorage.getItem('token');
+        const res = await fetch(`https://backend-real68.vercel.app/api/users/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }); 
         if (!res.ok) {
           console.error('Failed to fetch data');
           setLoading(false);
           return;
         }
         const data = await res.json();
-        setItems(data);
+        console.log("🔍 ", data);
 
-        if (data.length > 0) {
-          const user = data[0];
+
+        const user = Array.isArray(data) ? data[0] : data;
+
+        if (user) {
+          setPrefix(user.prefix || '');
           setFirstname(user.firstname || '');
-          setFullname(user.fullname || '');
           setLastname(user.lastname || '');
           setUsername(user.username || '');
-          setPassword(user.password || '');
           setAddress(user.address || '');
         }
       } catch (error) {
@@ -54,12 +59,14 @@ export default function EditUser() {
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/edit', {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`https://backend-real68.vercel.app/api/users/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ id, firstname, fullname, lastname, username, password, address }),
+        body: JSON.stringify({ id, prefix, firstname, lastname, username, password, address }),
       });
 
       const result = await res.json();
@@ -75,8 +82,8 @@ export default function EditUser() {
           router.push('/admin/users');
         });
 
+        setPrefix('');
         setFirstname('');
-        setFullname('');
         setLastname('');
         setUsername('');
         setPassword('');
@@ -114,17 +121,16 @@ export default function EditUser() {
                 <span className="ms-3 fw-bold text-danger">Loading User Info...</span>
               </div>
             ) : (
-              items.map((item) => (
-                <form key={item.id} onSubmit={handleUpdateSubmit} noValidate>
+                <form onSubmit={handleUpdateSubmit} noValidate>
                   <div className="row">
                     <div className="col-md-3 mb-3">
                       <label className="form-label">Prefix</label>
                       <select
-                        name="firstname"
+                        name="prefix"
                         className="form-select"
-                        onChange={(e) => setFirstname(e.target.value)}
+                        onChange={(e) => setPrefix(e.target.value)}
                         required
-                        value={firstname}
+                        value={prefix}
                       >
                         <option value="">-- Select --</option>
                         <option value="Mr.">Mr.</option>
@@ -137,8 +143,8 @@ export default function EditUser() {
                       <input
                         type="text"
                         className="form-control"
-                        value={fullname}
-                        onChange={(e) => setFullname(e.target.value)}
+                        value={firstname}
+                        onChange={(e) => setFirstname(e.target.value)}
                         required
                       />
                     </div>
@@ -165,15 +171,14 @@ export default function EditUser() {
                     />
                   </div>
 
-                  <div className="mb-3">
-                    <label className="form-label">Password</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
+                <div className="mb-3">
+                    <label className="form-label">New Password (Optional)</label>
+                       <input
+                        type="password"
+                        className="form-control"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        />
                   </div>
 
                   <div className="mb-3">
@@ -197,8 +202,8 @@ export default function EditUser() {
                     </a>
                   </div>
                 </form>
-              ))
-            )}
+              )
+            }
           </div>
         </div>
       </div>

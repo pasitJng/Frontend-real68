@@ -7,8 +7,8 @@ export async function GET(req) {
     const id = searchParams.get("id");
 
     const url = id
-      ? `https://backend-nextjs-virid.vercel.app/api/users/${id}`
-      : `https://backend-nextjs-virid.vercel.app/api/users`;
+      ? `https://backend-real68.vercel.app/api/users/${id}`
+      : `https://backend-real68.vercel.app/api/users`;
 
     const res = await fetch(url, { cache: "no-store" });
 

@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const res = await fetch("https://backend-nextjs-virid.vercel.app/api/users", {
+    const res = await fetch("https://backend-real68.vercel.app/api/users", {
       cache: "no-store", // ป้องกันการ cache
     });
 
@@ -29,8 +29,10 @@ export async function DELETE(request) {
       return NextResponse.json({ error: "User ID is required" }, { status: 400 });
     }
 
-    const res = await fetch(`https://backend-nextjs-virid.vercel.app/api/users/${id}`, {
+    const authHeader = request.headers.get("authorization");
+    const res = await fetch(`https://backend-real68.vercel.app/api/users/${id}`, {
       method: "DELETE",
+      headers: { "Authorization": authHeader }
     });
 
     if (!res.ok) {

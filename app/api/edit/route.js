@@ -1,7 +1,7 @@
 // /app/api/edit/route.js
 import { NextResponse } from "next/server";
 
-const BASE_URL = "https://backend-nextjs-virid.vercel.app/api/users";
+const BASE_URL = "https://backend-real68.vercel.app/api/users";
 
 // ✅ ดึง user ตาม id
 export async function GET(req) {
