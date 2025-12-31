@@ -228,7 +228,7 @@ export default function Service() {
         .bike-image {
           max-width: 90%;
           max-height: 100%;
-          width: auto;
+          width: 800px;
           height: auto;
           object-fit: contain;
           filter: drop-shadow(0 20px 40px rgba(220, 20, 60, 0.3));

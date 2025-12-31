@@ -102,7 +102,7 @@ body {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 110vh;
+  height: 100vh;
   object-fit: cover; /* ครอบเต็มจอโดยไม่เสียอัตราส่วน */
   z-index: 0; /* ด้านหลัง content ทุกตัว */
   pointer-events: none; /* ไม่รบกวนคลิก */
@@ -112,7 +112,7 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  height: 107.4%;
+  height: 107.95%;
   background: linear-gradient(
     135deg,
     rgba(0, 0, 0, 0.8) 0%,
@@ -233,7 +233,7 @@ body {
   from { opacity: 0; transform: translateX(50px) scale(0.9); }
   to { opacity: 1; transform: translateX(0) scale(1); }
 }
-.carousel-card {
+.croausel-card {
   background: linear-gradient(145deg, var(--ducati-gray), #0d0d0d);
   border-radius: 25px;
   overflow: hidden;
@@ -257,7 +257,6 @@ body {
 }
 .carousel-card:hover::before { opacity: 1; }
 .carousel-card:hover {
-  transform: translateY(-10px) scale(1.02);
   box-shadow: 0 25px 50px rgba(220, 38, 38, 0.3);
 }
 .carousel-controls {
@@ -286,10 +285,10 @@ body {
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin-top: 3rem;
+  margin-bottom: 10rem;
 }
 .carousel-dot {
-  width: 15px; height: 15px;
+  width: 12px; height: 12px;
   border-radius: 50%;
   background: #666;
   cursor: pointer;
@@ -480,10 +479,11 @@ z-index:10;
 .hero-content { padding:0 1rem; }
 .hero-overlay {   height: 108%; }
 .carousel-container { padding:0 1rem; }
+.carousel-indicators { margin-bottom: 3rem}
 .cards-section { padding:4rem 1rem; }
 .stats-section { padding:4rem 1rem; }
 .carousel-slide { flex-direction: column; }
-.card-image-container { height:200px; }
+.card-image-container { height:300px; }
 .card-title { font-size:1.2rem; }
 .card-description { font-size:0.9rem; }
 .specs-list li { font-size:0.85rem; }
@@ -496,7 +496,7 @@ z-index:10;
 .subtitle { font-size:1.2rem; }
 .section-title { font-size:2rem; }
 .carousel-controls { width:40px; height:40px; font-size:1rem; }
-.card-image-container { height:180px; }
+.card-image-container { height:230px; }
 .card-title { font-size:1rem; }
 .card-description { font-size:0.8rem; }
 .specs-list li { font-size:0.75rem; }
@@ -509,7 +509,8 @@ z-index:10;
 .subtitle { font-size:1rem; }
 .section-title { font-size:1.6rem; }
 .carousel-controls { width:35px; height:35px; font-size:0.9rem; }
-.card-image-container { height:160px; }
+.carousel-indicators { margin-bottom: 3.5rem}
+.card-image-container { height:210px; }
 .card-title { font-size:0.9rem; }
 .card-description { font-size:0.75rem; }
 .specs-list li { font-size:0.7rem; }
@@ -577,12 +578,12 @@ z-index:10;
             ))}
           </div>
         </div>
-        <div className="carousel-indicators">
+      </div>
+      <div className="carousel-indicators">
           {motorcycles.map((_, index) => (
             <span key={index} className={`carousel-dot ${index === currentSlide ? 'active' : ''}`} onClick={() => setCurrentSlide(index)}></span>
           ))}
         </div>
-      </div>
     </div>
   </section>
 
