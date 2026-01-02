@@ -9,20 +9,49 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState({ id: "", name: "" });
+  const [user, setUser] = useState({ id: "", name: "" , role: ""});
 
   // ตรวจสอบ token และโหลดข้อมูล user
 useEffect(() => {
   const token = localStorage.getItem("token");
-  const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const storedUserStr = localStorage.getItem("user");
 
-  if (token && storedUser?.id) {
-    setIsLoggedIn(true);
-    setUser(storedUser);
+  if (token && storedUserStr) {
+    try {
+      const parsedUser = JSON.parse(storedUserStr);
+      // ตรวจสอบว่ามีข้อมูลพื้นฐานไหม
+      if (parsedUser.id) {
+        setIsLoggedIn(true);
+        setUser({
+          id: parsedUser.id,
+          // ใช้ firstname จาก API ถ้าไม่มีให้ใช้ name ของเดิม
+          name: parsedUser.firstname || parsedUser.name || "User", 
+          // สำคัญมาก: ต้องดึง role ออกมาให้ได้
+          role: parsedUser.role || "" 
+        });
+        console.log("Navbar User Role:", parsedUser.role);
+      }
+    } catch (e) {
+      console.error("Parsing error", e);
+    }
   } else {
     setIsLoggedIn(false);
+    setUser({ id: "", name: "", role: "" });
   }
 }, [pathname]);
+
+useEffect(() => {
+  const storedUser = localStorage.getItem("user");
+  if (storedUser) {
+    const parsedUser = JSON.parse(storedUser);
+    setUser({
+      name: parsedUser.name || "Guest",
+      id: parsedUser.id || "N/A",
+      role: parsedUser.role || "user" // ✅ ต้องดึงตัวนี้มาด้วย
+    });
+    setIsLoggedIn(true);
+  }
+}, []);
 
 
 
@@ -131,15 +160,24 @@ useEffect(() => {
                 </li>
                 <li><hr className="dropdown-divider" /></li>
             {/* ปุ่มไปที่ Dashboard */}
+                {/* ถ้าเป็น user ปกติ อาจจะโชว์เมนูอื่นแทน (ถ้ามี) */}
                 <li>
-                  <Link
-                    href="/admin/users"
-                    className="dropdown-item fw-bold d-flex align-items-center justify-content-center justify-content-lg-start"
-                  >
-                    <i className="bi bi-speedometer2 me-2"></i> Admin Dashboard
-                  </Link>
+                      <Link href="/Profile/users" className="dropdown-item fw-bold">
+                        <i className="bi bi-person me-2"></i> My Profile
+                      </Link>
                 </li>
 
+                  {/* เช็คว่าเป็น admin เท่านั้นถึงจะเห็นปุ่มนี้ */}
+                {user.role?.toLowerCase() === 'admin' && (
+                  <li>
+                    <Link
+                      href="/admin/users"
+                      className="dropdown-item  d-flex align-items-center text-primary fw-bold"
+                    >
+                      <i className="bi bi-speedometer2 me-2"></i> Admin Dashboard
+                    </Link>
+                  </li>
+                )}
 
                 <li>
                   <button

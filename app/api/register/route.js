@@ -4,7 +4,7 @@ export async function POST(req) {
     const body = await req.json();
 
     // ส่งต่อไปยัง API จริง (https://backend-real68.vercel.app/api/users)
-    const response = await fetch("https://backend-real68.vercel.app/api/users", {
+    const response = await fetch("https://backend-real68.vercel.app/api", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),

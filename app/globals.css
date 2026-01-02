@@ -26,4 +26,17 @@ body {
 }
 
 
+/* ซ่อนไอคอนรูปตาของ Microsoft Edge */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+
+/* สำหรับ Browser อื่นๆ (ถ้ามี) */
+input::-webkit-contacts-auto-fill-button,
+input::-webkit-credentials-auto-fill-button {
+  visibility: hidden;
+  display: none !important;
+  pointer-events: none;
+}
 

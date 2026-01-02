@@ -1,8 +1,9 @@
 'use client';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Swal from 'sweetalert2';
 import BannerNotice from "@/components/BannerNotice";
+import ForgotPassword from '@/components/ForgotPassword';
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -11,6 +12,36 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [formValidated, setFormValidated] = useState(false);
   const router = useRouter();
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+
+  useEffect(() => {
+    const savedUsername = localStorage.getItem("rememberedUsername");
+    const savedPassword = localStorage.getItem("rememberedPassword");
+    const savedRemember = localStorage.getItem("rememberMe") === "true";
+    const savedTimestamp = localStorage.getItem("rememberTimestamp");
+
+    if (savedRemember && savedUsername && savedTimestamp) {
+      const now = new Date().getTime();
+      const expirationTime = 24 * 60 * 60 * 1000;
+
+      if (now - parseInt(savedTimestamp) > expirationTime) {
+        localStorage.removeItem("rememberedPassword");
+        
+        // ✅ ยังคงแสดง Username และสถานะติ๊กถูกไว้
+        setUsername(savedUsername);
+        setPassword(""); // ล้างรหัสผ่านใน State ออก
+        setRememberMe(true);
+        
+        console.log("⏰ Password expired, but Username remains.");
+      } else {
+        // ✅ ถ้ายังไม่หมดเวลา -> ใส่ให้ทั้งคู่
+        setUsername(savedUsername);
+        setPassword(savedPassword || "");
+        setRememberMe(true);
+      }
+    }
+  }, []);
+
 
 const handleSubmit = async (e) => {
   e.preventDefault();
@@ -44,16 +75,37 @@ const handleSubmit = async (e) => {
     if (data.token) {
   // เก็บ token
   localStorage.setItem('token', data.token);
+  
+  
+
+  if (rememberMe) {
+
+    const now = new Date().getTime();
+    // ถ้าติ๊กถูก ให้บันทึก Username และสถานะไว้
+        localStorage.setItem("rememberedUsername", username);
+        localStorage.setItem("rememberedPassword", password);
+        localStorage.setItem("rememberMe", "true");
+        localStorage.setItem("rememberTimestamp", now.toString());
+
+    } else {
+        // ถ้าไม่ได้ติ๊ก ให้ลบค่าเก่าทิ้ง
+        localStorage.removeItem("rememberedUsername");
+        localStorage.removeItem("rememberedPassword");
+        localStorage.removeItem("rememberTimestamp");
+        localStorage.setItem("rememberMe", "false");
+    }
+
+
 
   // เก็บ user (id + name) ไว้ใช้ใน Navbar
 const userData = {
         id: data.user?.id || data.user?.UID || "N/A",
-        name: data.user?.username || data.user?.fullname || username // ถ้าไม่มีชื่อส่งมา ให้ใช้ username ที่พิมพ์ล็อกอิน
+        name: data.user?.username || data.user?.fullname || username, // ถ้าไม่มีชื่อส่งมา ให้ใช้ username ที่พิมพ์ล็อกอิน
+        role: data.user.role || "user" // ✅ เก็บ role ไว้ด้วย
       };
 
       localStorage.setItem('user', JSON.stringify(userData));
       
-      console.log("✅ บันทึกสำเร็จ:", localStorage.getItem('user'));
 
   Swal.fire({
     icon: 'success',
@@ -62,8 +114,12 @@ const userData = {
     timer: 900,
     showConfirmButton: false,
   }).then(() => {
-    window.location.href = "/admin/users"; 
-  });
+        if (data.user.role === 'admin') {
+            window.location.href = "admin/users"; // ไปหน้าแอดมิน
+        } else {
+            window.location.href = "/"; // ไปหน้ายูสเซอร์ทั่วไป
+        }
+    });
 } else if (data.error === "Invalid username or password") {
 
     } else if (data.error) {
@@ -71,15 +127,18 @@ const userData = {
         icon: 'error',
         title: 'Login failed',
         text: data.error,
-        timer: 900,
+        timer: 10000,
         showConfirmButton: false,
       });
     }
   } catch (error) {
+    console.error("❌ Because:", error);
     Swal.fire({
       icon: 'error',
       title: 'Server Error',
       text: 'Unable to connect to server',
+      timer: 10000,
+      showConfirmButton: false,
     });
   }
   
@@ -130,6 +189,14 @@ const userData = {
                         placeholder="Enter your password"
                         required
                       />
+                      <button
+                        className="btn btn-outline-secondary"
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        style={{ borderTopRightRadius: '0.375rem', borderBottomRightRadius: '0.375rem' }}
+                      >
+                        <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
+                    </button>
                     </div>
                     <div className="invalid-feedback d-block">
                       {formValidated && !password && "Please enter your password"}
@@ -158,7 +225,9 @@ const userData = {
 
                   {/* Links */}
                   <div className="d-flex flex-column flex-sm-row justify-content-between mt-3 gap-2 text-center text-sm-start">
-                    <a href="#" className="text-decoration-none small text-muted">Forgot password?</a>
+                    <a href="#" className="text-decoration-none small text-muted"
+                    onClick={() =>  setShowPasswordModal(true)} 
+                    >Forgot password? </a>
                     <div className="small">
                       Don't have an account?
                       <a href="/Register" className="text-decoration-none text-danger ms-1">Create an Account</a>
@@ -171,6 +240,13 @@ const userData = {
           </div>
         </div>
       </div>
+
+                      {showPasswordModal &&(
+                        <ForgotPassword 
+                          show={showPasswordModal} 
+                          onClose={() => setShowPasswordModal(false)} 
+                        />
+                      )}
     </main>
   );
 }

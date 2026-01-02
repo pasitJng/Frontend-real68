@@ -13,6 +13,7 @@ export default function Page() {
   const [selectedIds, setSelectedIds] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
 const getUsers = async (isInitial = false) => {
   try {
@@ -29,7 +30,6 @@ const getUsers = async (isInitial = false) => {
 
     if (res.ok) {
       const data = await res.json();
-      console.log("Data from API:", data[0]);
       setItems(data);
     }
   } catch (error) {
@@ -40,13 +40,46 @@ const getUsers = async (isInitial = false) => {
 };
 
 useEffect(() => {
-  const token = localStorage.getItem('token');
-  if (!token) { router.push('/Login'); return; }
+  const checkAuth = () => {
+    const storedUser = localStorage.getItem("user");
+    const token = localStorage.getItem('token');
 
-  getUsers(true); // ส่ง true เพื่อให้แสดง loading ในครั้งแรก
+    // 1. เช็คว่ามี Token ไหม
+    if (!token || !storedUser) {
+      router.push('/Login');
+      return false;
+    }
+
+    try {
+      const user = JSON.parse(storedUser);
+      // 2. เช็คว่าเป็น Admin ไหม
+      if (user.role?.toLowerCase() !== 'admin') {
+         Swal.fire({
+            icon: 'error',
+            title: 'Denyed Access',
+            text: 'Sorry, You are not admin!',
+            timer: 10000,
+            showConfirmButton: false,
+          }).routerPush('/');
+          return false;
+      }
+      return true; // ผ่านการตรวจสอบ
+    } catch (error) {
+      router.push('/');
+      return false;
+    }
+  };
+
+  const authorized = checkAuth();
   
-  const interval = setInterval(() => getUsers(false), 5000); // ดึงข้อมูลทุก 5 วินาที (ไม่ต้องโชว์ loading)
-  return () => clearInterval(interval);
+  if (authorized) {
+    setIsAuthorized(true); // ยืนยันสิทธิ์
+    getUsers(true); // โหลดข้อมูลครั้งแรก
+    
+    // ตั้งเวลาดึงข้อมูลใหม่ทุก 5 วินาที
+    const interval = setInterval(() => getUsers(false), 5000);
+    return () => clearInterval(interval); // Cleanup เมื่อออกจากหน้า
+  }
 }, [router]);
   const handleSelect = (id) => {
     setSelectedIds((prev) =>
