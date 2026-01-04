@@ -140,6 +140,7 @@ const handleDeleteOne = async (id) => {
       html: `
         <div style="text-align: left; font-size: 1rem; line-height: 1.7;">
           <p><i class="bi bi-person text-danger"></i> <strong>Username:</strong> ${item.username}</p>
+          <p><i class="bi bi-envelope text-danger"></i> <strong>Email:</strong> ${item.email}</p>
           <p><i class="bi bi-card-text text-danger"></i> <strong>Prefix:</strong> ${item.prefix}</p>
           <p><i class="bi bi-person-bounding-box text-danger"></i> <strong>Firstname:</strong> ${item.firstname}</p>
           <p><i class="bi bi-person-bounding-box text-danger"></i> <strong>Lastname:</strong> ${item.lastname}</p>

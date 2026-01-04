@@ -165,10 +165,10 @@ export default function UserProfile() {
                 </p>
 
                 <div className="d-flex flex-wrap justify-content-center justify-content-md-start gap-2 mb-4">
-                  <span className={`badge rounded-pill px-3 py-2 d-flex align-items-center gap-2 ${user.role === 'admin' ? 'bg-danger-subtle text-danger border border-danger-subtle' : 'bg-success-subtle text-success border border-success-subtle'}`}>
+                  <span className={`badge rounded-pill px-3 py-2 d-flex align-items-center gap-2 ${user.role === 'admin' ? 'bg-danger-subtle text-danger border border-danger-subtle' : 'bg-primary-subtle text-primary border border-primary-subtle'}`}>
                     <Shield size={14} /> {user.role.toUpperCase()}
                   </span>
-                  <span className="badge rounded-pill px-3 py-2 bg-primary-subtle text-primary border border-primary-subtle d-flex align-items-center gap-2">
+                  <span className="badge rounded-pill px-3 py-2 bg-success-subtle text-success border border-success-subtle d-flex align-items-center gap-2">
                     <Activity size={14} /> {user.status.toUpperCase()}
                   </span>
                 </div>
