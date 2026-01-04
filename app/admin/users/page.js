@@ -151,7 +151,7 @@ const handleDeleteOne = async (id) => {
       background: '#ffffff',
       showCloseButton: true,
       showConfirmButton: false,
-      width: '30%',
+      width: window.innerWidth > 768 ? '20%' : '90%',
       customClass: {
         popup: 'responsive-popup border border-danger'
       }
