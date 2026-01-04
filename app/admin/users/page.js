@@ -144,7 +144,7 @@ const handleDeleteOne = async (id) => {
           <p><i class="bi bi-card-text text-danger"></i> <strong>Prefix:</strong> ${item.prefix}</p>
           <p><i class="bi bi-person-bounding-box text-danger"></i> <strong>Firstname:</strong> ${item.firstname}</p>
           <p><i class="bi bi-person-bounding-box text-danger"></i> <strong>Lastname:</strong> ${item.lastname}</p>
-          <p><i class="bi bi-key text-danger"></i> <strong>Password:</strong> ${item.password}</p>
+          <p><i class="bi bi-key text-danger"></i> <strong>Password:</strong> ******** </p>
           <p><i class="bi bi-geo-alt text-danger"></i> <strong>Address:</strong> ${item.address}</p>
         </div>
       `,
