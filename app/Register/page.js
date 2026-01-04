@@ -7,8 +7,11 @@ import 'sweetalert2/dist/sweetalert2.min.css'; // ✅ นำเข้า CSS ข
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
+
 export default function Register() {
   const router = useRouter()
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -179,15 +182,25 @@ const handleSubmit = async (e) => {
                     </div>
                   <div className="col-md-6 mb-3">
                     <label className="form-label">Password</label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      name="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      required
-                    />
-                    <div className="invalid-feedback">Please enter your password.</div>
+                    <div className="input-group"> 
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        className="form-control"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                      />
+                      <div className="invalid-feedback">Please enter your password.</div>
+                    <button
+                        className="btn btn-outline-secondary"
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        style={{ borderTopRightRadius: '0.375rem', borderBottomRightRadius: '0.375rem' }}
+                      >
+                        <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
+                    </button>
+                    </div>
                   </div>
                 </div>
                 

@@ -69,9 +69,9 @@ export default function EditUser() {
   const [gender, setGender] = useState('');
   const [birthdate, setBirthdate] = useState('');
   const [address, setAddress] = useState('');
-  const [loading, setLoading] = useState(true);
   const [role, setRole] = useState('user');
-  
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(true);
 
   const [passwords, setPasswords] = useState({ newP: '' });
   const [showPassword, setShowPassword] = useState({
@@ -102,7 +102,7 @@ export default function EditUser() {
           return;
         }
         const data = await res.json();
-        console.log("🔍 ", data);
+        //console.log("🔍 ", data);
 
 
         const user = Array.isArray(data) ? data[0] : data;
@@ -115,6 +115,8 @@ export default function EditUser() {
           setGender(user.gender || '');
           setBirthdate(user.birthdate ? user.birthdate.slice(0, 10) : ''); // ตัดเวลาออก
           setAddress(user.address || '');
+          setEmail(user.email || '');
+          setRole(user.role || 'user');
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -147,14 +149,33 @@ export default function EditUser() {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
+
+      const updateData = { 
+      id, 
+      prefix, 
+      firstname, 
+      lastname, 
+      username, 
+      gender, 
+      birthdate, 
+      address, 
+      email,
+      role 
+    };
+
+    if (passwords.newP && passwords.newP.trim() !== "") {
+      updateData.password = passwords.newP; // ใช้ค่าจาก passwords.newP
+    }
+
       const res = await fetch(`https://backend-real68.vercel.app/api/users/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ id, prefix, firstname, lastname, username, password, gender, birthdate, address }),
+        body: JSON.stringify(updateData),
       });
+
 
       const result = await res.json();
 
@@ -177,22 +198,28 @@ export default function EditUser() {
         setGender('');
         setBirthdate('');
         setAddress('');
+        setEmail('');
+        setRole('user');
+
       } else {
         Swal.fire({
           title: 'Error!',
-          text: result.error || 'เกิดข้อผิดพลาด!',
+          text: result.error || 'Error!',
           icon: 'error',
-          confirmButtonText: 'ตกลง',
+          showConfirmButton: false,
+          timer: 2000,
         });
       }
     } catch (error) {
       Swal.fire({
         icon: 'error',
-        title: 'ข้อผิดพลาดเครือข่าย',
+        title: 'Server Error',
         text: 'Cannot connect to the server. Please try again later.',
       });
     }
   };
+
+
 
   return (
     <main className="container py-5 px-3">
@@ -258,6 +285,19 @@ export default function EditUser() {
                       />
                     </div>
                   </div>
+
+                <div className="row">
+                    <div className="col-md mb-3">
+                      <label className="form-label">Email</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                      />
+                    </div>  
+                </div>
 
                   {/* แถวที่ 2: Prefix, First Name, Last Name */}
                   <div className="row">

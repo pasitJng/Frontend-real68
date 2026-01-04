@@ -32,7 +32,6 @@ export default function Login() {
         setPassword(""); // ล้างรหัสผ่านใน State ออก
         setRememberMe(true);
         
-        console.log("⏰ Password expired, but Username remains.");
       } else {
         // ✅ ถ้ายังไม่หมดเวลา -> ใส่ให้ทั้งคู่
         setUsername(savedUsername);
@@ -69,8 +68,6 @@ const handleSubmit = async (e) => {
     });
 
     const data = await res.json();
-
-    console.log("Response from API:", data);
 
     if (data.token) {
   // เก็บ token
@@ -132,7 +129,6 @@ const userData = {
       });
     }
   } catch (error) {
-    console.error("❌ Because:", error);
     Swal.fire({
       icon: 'error',
       title: 'Server Error',
