@@ -226,31 +226,37 @@ export default function UserProfile() {
                     </div>
                     
                     {/* Status Dot with Ping Effect */}
-                    {user.status === 'active' && (
-                      <div className="position-absolute" style={{ bottom: '0', right: '0', zIndex: 2 }}>
-                        {/* Ping Effect */}
-                        <span 
-                          className="position-absolute status-ping rounded-circle bg-success"
-                          style={{
-                            width: '27px',
-                            height: '27px',
-                            bottom: '0',
-                            right: '10px'
-                          }}
-                        ></span>
-                        
-                        {/* Static Dot */}
-                        <span 
-                          className="position-relative bg-success border border-4 border-white rounded-circle shadow-sm d-block"
-                          style={{
-                            width: '27px',
-                            height: '27px',
-                            bottom: '0',
-                            right: '10px',
-                          }}
-                        ></span>
-                      </div>
-                    )}
+                      {user.status === 'active' && (() => {
+                        // กำหนดสีตาม Role
+                        const roleColor = user.role?.toLowerCase() === 'admin' ? 'bg-danger' : 'bg-primary';
+
+                        return (
+                          <div className="position-absolute" style={{ bottom: '0', right: '0', zIndex: 2 }}>
+                            {/* Ping Effect */}
+                            <span 
+                              className={`position-absolute status-ping rounded-circle ${roleColor}`}
+                              style={{
+                                width: '27px',
+                                height: '27px',
+                                bottom: '0',
+                                right: '10px',
+                                opacity: 0.6 // ปรับให้จางลงนิดนึงเพื่อให้ดูเหมือนเงาสะท้อน
+                              }}
+                            ></span>
+                            
+                            {/* Static Dot */}
+                            <span 
+                              className={`position-relative border border-4 border-white rounded-circle shadow-sm d-block ${roleColor}`}
+                              style={{
+                                width: '27px',
+                                height: '27px',
+                                bottom: '0',
+                                right: '10px',
+                              }}
+                            ></span>
+                          </div>
+                        );
+                      })()}
                   </div>
                 </div>
 
@@ -275,20 +281,20 @@ export default function UserProfile() {
                   <div className="d-flex flex-wrap justify-content-center justify-content-md-start gap-2">
                     <button 
                         onClick={() =>  setShowEditModal(true)} 
-                        className="btn btn-dark px-4 py-2 d-flex align-items-center gap-2 rounded-3 shadow-sm text-white text-decoration-none"
+                        className="btn btn-outline-dark px-4 py-2 d-flex align-items-center gap-2 rounded-3 shadow-sm text-decoration-none"
                       >
                         <Edit size={18} /> Edit Profile
                     </button>
                     <button  
                     onClick={() =>  setShowPasswordModal(true)} 
-                    className="btn btn-outline-dark px-4 py-2 d-flex align-items-center gap-2 rounded-3 bg-white shadow-sm"
+                    className="btn btn-outline-danger px-4 py-2 d-flex align-items-center gap-2 rounded-3 shadow-sm"
                     >
                       <Lock size={18} /> Change Password 
                     </button>
                     {user.role?.toLowerCase() === 'admin' &&
                       <Link 
                           href="/admin/users" 
-                          className="btn btn-primary px-4 py-2 d-flex align-items-center gap-2 rounded-3 shadow-sm text-white text-decoration-none"
+                          className="btn btn-outline-primary px-4 py-2 d-flex align-items-center gap-2 rounded-3 shadow-smtext-decoration-none"
                         >
                           <i className="bi bi-speedometer2" size={18} /> Admin Dashboard
                       </Link>
