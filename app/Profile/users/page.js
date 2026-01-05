@@ -307,6 +307,7 @@ export default function UserProfile() {
                   </h5>
                   <InfoRow icon={<Hash size={18} />} label="User ID" value={user.id} />
                   <InfoRow icon={<User size={18} />} label="Username" value={user.username} />
+                  <InfoRow icon={<Mail size={18} />} label="Email" value={user.email} />
                   <InfoRow icon={<Shield size={18} />} label="Role" value={user.role} />
                   <InfoRow icon={<Activity size={18} />} label="Status" value={user.status} />
                 </div>
