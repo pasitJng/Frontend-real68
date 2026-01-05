@@ -114,7 +114,7 @@ const userData = {
         if (data.user.role === 'admin') {
             window.location.href = "admin/users"; // ไปหน้าแอดมิน
         } else {
-            window.location.href = "/"; // ไปหน้ายูสเซอร์ทั่วไป
+            window.location.href = "Profile/users"; // ไปหน้ายูสเซอร์ทั่วไป
         }
     });
 } else if (data.error === "Invalid username or password") {
