@@ -53,8 +53,9 @@ const handleSubmit = async (e) => {
       icon: 'warning',
       title: 'Incomplete form',
       text: 'Please fill in all required fields',
-      timer: 2000,
       showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
     });
     return;
   }
@@ -108,8 +109,9 @@ const userData = {
     icon: 'success',
     title: 'Login successful',
     text: 'Welcome!',
-    timer: 900,
     showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
   }).then(() => {
         if (data.user.role === 'admin') {
             window.location.href = "admin/users"; // ไปหน้าแอดมิน
@@ -124,8 +126,9 @@ const userData = {
         icon: 'error',
         title: 'Login failed',
         text: data.error,
-        timer: 10000,
         showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
       });
     }
   } catch (error) {
@@ -133,8 +136,9 @@ const userData = {
       icon: 'error',
       title: 'Server Error',
       text: 'Unable to connect to server',
-      timer: 10000,
       showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
     });
   }
   

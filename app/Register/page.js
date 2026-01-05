@@ -55,7 +55,9 @@ const handleSubmit = async (e) => {
       icon: 'warning',
       title: 'Incomplete Information',
       text: 'Please ensure all required fields are filled and the agreement is accepted.',
-      confirmButtonColor: '#f8bb86',
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
     });
     return;
   }
@@ -98,7 +100,7 @@ const handleSubmit = async (e) => {
           title: 'Registration Failed',
           text: errorMsg,
           showConfirmButton: false,
-          timer: 5000,
+          timer: 2000,
           timerProgressBar: true,
         });
         return;
@@ -138,7 +140,7 @@ const handleSubmit = async (e) => {
       title: 'Connection Error',
       text: 'Unable to connect to the server. Please check your internet connection.',
       showConfirmButton: false,
-      timer: 5000,
+      timer: 2000,
       timerProgressBar: true,
     });
     console.error("Submit Error:", error);

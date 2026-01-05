@@ -65,8 +65,9 @@ export default function ForgotPassword({ show, onClose }) {
         icon: 'success', 
         title: 'OTP Sent!', 
         text: 'Please check your email for the verification code.', 
-        timer: 2000,
         showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
       });
       setStep(2);
     } catch (err) {
@@ -74,8 +75,9 @@ export default function ForgotPassword({ show, onClose }) {
         icon: 'error', 
         title: 'Error', 
         text: err.message,
-        timer: 2000,
         showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
       });
     } finally { setLoading(false); }
   };
@@ -95,8 +97,9 @@ export default function ForgotPassword({ show, onClose }) {
         icon: 'success', 
         title: 'Verified!', 
         text: 'OTP code is correct. You can now reset your password.', 
-        timer: 2000,
         showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
       });
       setStep(3);
     } catch (err) {
@@ -104,8 +107,9 @@ export default function ForgotPassword({ show, onClose }) {
         icon: 'error', 
         title: 'Invalid Code', 
         text: 'The OTP you entered is incorrect. Please try again.',
-        timer: 2000,
         showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
       });
     } finally { setLoading(false); }
   };
@@ -117,8 +121,9 @@ export default function ForgotPassword({ show, onClose }) {
         icon: 'warning', 
         title: 'Password Mismatch', 
         text: 'The passwords you entered do not match!',
-        timer: 2000,
         showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
       });
     }
     setLoading(true);
@@ -134,8 +139,9 @@ export default function ForgotPassword({ show, onClose }) {
         icon: 'success', 
         title: 'Password Reset Successfully!', 
         text: 'You can now login with your new password.',
-        timer: 2000,
         showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
       });
       
       setEmail('');
@@ -149,8 +155,9 @@ export default function ForgotPassword({ show, onClose }) {
         icon: 'error', 
         title: 'Error', 
         text: err.message,
-        timer: 2000,
         showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
       });
     } finally { setLoading(false); }
   };

@@ -58,8 +58,9 @@ useEffect(() => {
             icon: 'error',
             title: 'Denyed Access',
             text: 'Sorry, You are not admin!',
-            timer: 10000,
             showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
           }).routerPush('/');
           return false;
       }
@@ -127,6 +128,7 @@ const handleDeleteOne = async (id) => {
         MySwal.fire('Deleted!', 'Selected users have been deleted.', 'success');
         setSelectedIds([]);
         getUsers(); // โหลดข้อมูลใหม่หลังจากลบสำเร็จ
+        
       } catch (err) {
         console.error('Delete error:', err);
         MySwal.fire('Error', 'Failed to delete users.', 'error');

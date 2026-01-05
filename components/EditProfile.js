@@ -78,8 +78,9 @@ export default function EditProfile({ show, onClose, onSuccess }) {
                 icon: 'success',
                 title: 'Updated Successfully!',
                 text: 'Your profile has been updated',
-                showConfirmButton: false, // เปิดปุ่ม OK เพื่อให้ผู้ใช้เป็นคนกดปิดเองได้
-                timer: 5000 // เปลี่ยนเป็น 3 วินาที (20 วินาทีเดิมนานไปครับ)
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
               });
 
               // หลังจาก Swal ปิดลงแล้ว ถึงจะทำงาน 2 บรรทัดนี้
@@ -91,8 +92,9 @@ export default function EditProfile({ show, onClose, onSuccess }) {
               icon: 'error',
               title: 'Error',
               text: 'Unable to connect to server',
-              showConfirmButton: false, // เปิดปุ่ม OK เพื่อให้ผู้ใช้เป็นคนกดปิดเองได้
-              timer: 5000 // เปลี่ยนเป็น 3 วินาที (20 วินาทีเดิมนานไปครับ)
+              showConfirmButton: false,
+              timer: 2000,
+              timerProgressBar: true,
             });
           }
         };

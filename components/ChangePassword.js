@@ -83,7 +83,9 @@ const handleUpdatePassword = async (e) => {
       icon: 'warning',
       title: 'Validation Failed',
       text: 'The new passwords do not match. Please re-enter them.',
-      confirmButtonColor: '#0d6efd'
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
     });
   }
 
@@ -121,8 +123,10 @@ const handleUpdatePassword = async (e) => {
       icon: 'success',
       title: 'Password Updated',
       text: 'Your Password have been successfully changed.',
-      timer: 10000,
       showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
+      
     });
 
     onClose(); // Reset state and close modal
@@ -132,8 +136,9 @@ const handleUpdatePassword = async (e) => {
       icon: 'error',
       title: 'Update Failed',
       text: error.message,
-      timer: 10000,
       showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
     });
   }
 };

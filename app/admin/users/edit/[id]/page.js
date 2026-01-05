@@ -186,6 +186,7 @@ export default function EditUser() {
           text: `Edit user ID: ${id} successfully.`,
           showConfirmButton: false,
           timer: 2000,
+          timerProgressBar: true,
         }).then(() => {
           router.push('/admin/users');
         });
@@ -208,6 +209,7 @@ export default function EditUser() {
           icon: 'error',
           showConfirmButton: false,
           timer: 2000,
+          timerProgressBar: true,
         });
       }
     } catch (error) {
@@ -215,6 +217,9 @@ export default function EditUser() {
         icon: 'error',
         title: 'Server Error',
         text: 'Cannot connect to the server. Please try again later.',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
       });
     }
   };
