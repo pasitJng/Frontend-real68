@@ -108,7 +108,7 @@ const userData = {
   Swal.fire({
     icon: 'success',
     title: 'Login successful',
-    text: 'Welcome!',
+    text: 'Welcome!, ' + userData.name,
     showConfirmButton: false,
     timer: 2000,
     timerProgressBar: true,

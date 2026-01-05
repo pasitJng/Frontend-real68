@@ -125,7 +125,14 @@ const handleDeleteOne = async (id) => {
           )
         );
 
-        MySwal.fire('Deleted!', 'Selected users have been deleted.', 'success');
+        await Swal.fire({
+            icon: 'success',
+            title: 'Deleted successfully',
+            text: 'Selected users have been deleted.',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+          })
         setSelectedIds([]);
         getUsers(); // โหลดข้อมูลใหม่หลังจากลบสำเร็จ
         
