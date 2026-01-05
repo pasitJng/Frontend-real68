@@ -45,6 +45,75 @@ const customStyles = {
   }
 };
 
+// --- Frame Animation Styles (แบบเด้งออกมา) ---
+const frameAnimationStyles = `
+  @keyframes ping-frame {
+    0% {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    50% {
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(1.4);
+      opacity: 0;
+    }
+  }
+
+  @keyframes ping-frame-delayed {
+    0% {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    50% {
+      opacity: 0.6;
+    }
+    100% {
+      transform: scale(1.6);
+      opacity: 0;
+    }
+  }
+
+  @keyframes bounce-scale {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  @keyframes status-ping {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+
+  .ping-frame-1 {
+    animation: ping-frame 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  .ping-frame-2 {
+    animation: ping-frame-delayed 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+    animation-delay: 0.5s;
+  }
+
+  .ping-frame-3 {
+    animation: ping-frame 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+    animation-delay: 1s;
+  }
+
+  .status-ping {
+    animation: status-ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+`;
+
 // --- Skeleton Component (ตอนกำลังโหลด) ---
 const ProfileSkeleton = () => (
   <div className="container py-5">
@@ -68,7 +137,7 @@ const InfoRow = ({ icon, label, value }) => (
     <div className="text-secondary">{icon}</div>
     <div className="flex-grow-1">
       <div className="small text-muted fw-bold text-uppercase" style={{ fontSize: '0.7rem', letterSpacing: '1px' }}>{label}</div>
-      <div className={value ? 'text-dark fw-medium' : 'text-muted fst-italic'}>{value || 'ไม่ได้ระบุ'}</div>
+      <div className={value ? 'text-dark fw-medium' : 'text-muted fst-italic'}>{value || 'Null'}</div>
     </div>
   </div>
 );
@@ -77,7 +146,7 @@ const InfoRow = ({ icon, label, value }) => (
 export default function UserProfile() {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null); // 1. เพิ่ม State เก็บ Error
+    const [error, setError] = useState(null);
 
     const [showEditModal, setShowEditModal] = useState(false);
     const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -89,29 +158,27 @@ export default function UserProfile() {
           try {
             setLoading(true);
             
-            // 1. ดึงข้อมูล Login จาก localStorage
             const storedUser = localStorage.getItem("user");
             const token = localStorage.getItem("token");
 
             if (!storedUser || !token) {
-              router.push('/Login'); // ถ้าไม่มีข้อมูล ให้ไปหน้า Login
+              router.push('/Login');
               return;
             }
 
             const parsedUser = JSON.parse(storedUser);
-            const userId = parsedUser.id; // ดึง ID ของคนที่ Login อยู่
+            const userId = parsedUser.id;
 
-            // 2. ยิง API ไปที่ Backend ของคุณ
             const response = await fetch(`https://backend-real68.vercel.app/api/users/${userId}`, {
               headers: {
-                'Authorization': `Bearer ${token}` // ส่ง Token ไปด้วย
+                'Authorization': `Bearer ${token}`
               }
             });
 
-            if (!response.ok) throw new Error('ดึงข้อมูลไม่สำเร็จ');
+            if (!response.ok) throw new Error('Failed to fetch user data');
 
             const data = await response.json();
-            setUser(data); // เอาข้อมูลจริงใส่ State
+            setUser(data);
 
           } catch (err) {
             setError(err.message);
@@ -137,109 +204,142 @@ export default function UserProfile() {
 
   if (!user) return null;
 
-  const fullName = `${user.prefix || ''} ${user.firstname} ${user.lastname}`.trim();
+  const fullName = `${user.prefix || ''} ${user.firstname} ${user.lastname} `.trim();
 
   return (
-    <div className="min-vh-100 bg-light py-5">
-      <div className="container">
-        <div className="mx-auto" style={{ maxWidth: '900px' }}>
-          
-          {/* Header Card */}
-          <div className="card mb-4 p-4 p-md-5 position-relative border-0 shadow-sm" style={customStyles.headerCard}>
-            <div className="row align-items-center position-relative">
-              <div className="col-12 col-md-auto text-center mb-4 mb-md-0">
-                <div className="position-relative d-inline-block">
-                  <div className="rounded-circle text-white fw-bold shadow-lg mx-auto" style={customStyles.avatar}>
-                    {getInitials(user.firstname, user.lastname)}
+    <>
+      <style>{frameAnimationStyles}</style>
+      <div className="min-vh-100 bg-light py-5">
+        <div className="container">
+          <div className="mx-auto" style={{ maxWidth: '900px' }}>
+            
+            {/* Header Card */}
+            <div className="card mb-4 p-4 p-md-5 position-relative border-0 shadow-sm" style={customStyles.headerCard}>
+              <div className="row align-items-center position-relative">
+                <div className="col-12 col-md-auto text-center mb-4 mb-md-0">
+                  <div className="position-relative d-inline-block">
+                    
+                    
+                    {/* Avatar with Bounce */}
+                    <div className="bounce-scale rounded-circle text-white fw-bold shadow-lg mx-auto position-relative" style={{...customStyles.avatar, zIndex: 1}}>
+                      {getInitials(user.firstname, user.lastname)}
+                    </div>
+                    
+                    {/* Status Dot with Ping Effect */}
+                    {user.status === 'active' && (
+                      <div className="position-absolute" style={{ bottom: '0', right: '0', zIndex: 2 }}>
+                        {/* Ping Effect */}
+                        <span 
+                          className="position-absolute status-ping rounded-circle bg-success"
+                          style={{
+                            width: '27px',
+                            height: '27px',
+                            bottom: '0',
+                            right: '10px'
+                          }}
+                        ></span>
+                        
+                        {/* Static Dot */}
+                        <span 
+                          className="position-relative bg-success border border-4 border-white rounded-circle shadow-sm d-block"
+                          style={{
+                            width: '27px',
+                            height: '27px',
+                            bottom: '0',
+                            right: '10px',
+                          }}
+                        ></span>
+                      </div>
+                    )}
                   </div>
-                  {user.status === 'active' && (
-                    <span className="position-absolute bottom-0 end-0 p-2 bg-success border border-4 border-white rounded-circle shadow-sm"></span>
-                  )}
-                </div>
-              </div>
-
-              <div className="col text-center text-md-start">
-                <h1 className="display-6 fw-bold text-dark mb-1">{fullName}</h1>
-                <p className="text-secondary d-flex align-items-center justify-content-center justify-content-md-start gap-2 mb-3">
-                  <UserCircle size={18} /> @{user.username}
-                </p>
-
-                <div className="d-flex flex-wrap justify-content-center justify-content-md-start gap-2 mb-4">
-                  <span className={`badge rounded-pill px-3 py-2 d-flex align-items-center gap-2 ${user.role === 'admin' ? 'bg-danger-subtle text-danger border border-danger-subtle' : 'bg-primary-subtle text-primary border border-primary-subtle'}`}>
-                    <Shield size={14} /> {user.role.toUpperCase()}
-                  </span>
-                  <span className="badge rounded-pill px-3 py-2 bg-success-subtle text-success border border-success-subtle d-flex align-items-center gap-2">
-                    <Activity size={14} /> {user.status.toUpperCase()}
-                  </span>
                 </div>
 
-                <div className="d-flex flex-wrap justify-content-center justify-content-md-start gap-2">
-                  <button 
-                      onClick={() =>  setShowEditModal(true)} 
-                      className="btn btn-dark px-4 py-2 d-flex align-items-center gap-2 rounded-3 shadow-sm text-white text-decoration-none"
-                    >
-                      <Edit size={18} /> Edit Profile
-                  </button>
-                  <button  
-                  onClick={() =>  setShowPasswordModal(true)} 
-                  className="btn btn-outline-dark px-4 py-2 d-flex align-items-center gap-2 rounded-3 bg-white shadow-sm"
-                  >
-                    <Lock size={18} /> Change Password 
-                  </button>
-                  {user.role?.toLowerCase() === 'admin' &&
-                    <Link 
-                        href="/admin/users" 
-                        className="btn btn-primary px-4 py-2 d-flex align-items-center gap-2 rounded-3 shadow-sm text-white text-decoration-none"
+                <div className="col text-center text-md-start">
+                  <h1 className="display-6 fw-bold text-dark mb-1">{fullName}</h1>
+                  <p className="text-secondary d-flex align-items-center justify-content-center justify-content-md-start gap-2 mb-1">
+                    <UserCircle size={18} /> @{user.username}
+                  </p>
+                  <p className="text-secondary d-flex align-items-center justify-content-center justify-content-md-start gap-2 mb-3">
+                    <Mail size={18} /> {user.email}
+                  </p>
+
+                  <div className="d-flex flex-wrap justify-content-center justify-content-md-start gap-2 mb-4">
+                    <span className={`badge rounded-pill px-3 py-2 d-flex align-items-center gap-2 ${user.role === 'admin' ? 'bg-danger-subtle text-danger border border-danger-subtle' : 'bg-primary-subtle text-primary border border-primary-subtle'}`}>
+                      <Shield size={14} /> {user.role.toUpperCase()}
+                    </span>
+                    <span className="badge rounded-pill px-3 py-2 bg-success-subtle text-success border border-success-subtle d-flex align-items-center gap-2">
+                      <Activity size={14} /> {user.status.toUpperCase()}
+                    </span>
+                  </div>
+
+                  <div className="d-flex flex-wrap justify-content-center justify-content-md-start gap-2">
+                    <button 
+                        onClick={() =>  setShowEditModal(true)} 
+                        className="btn btn-dark px-4 py-2 d-flex align-items-center gap-2 rounded-3 shadow-sm text-white text-decoration-none"
                       >
-                        <i className="bi bi-speedometer2" size={18} /> Admin Dashboard
-                    </Link>
-                  }
+                        <Edit size={18} /> Edit Profile
+                    </button>
+                    <button  
+                    onClick={() =>  setShowPasswordModal(true)} 
+                    className="btn btn-outline-dark px-4 py-2 d-flex align-items-center gap-2 rounded-3 bg-white shadow-sm"
+                    >
+                      <Lock size={18} /> Change Password 
+                    </button>
+                    {user.role?.toLowerCase() === 'admin' &&
+                      <Link 
+                          href="/admin/users" 
+                          className="btn btn-primary px-4 py-2 d-flex align-items-center gap-2 rounded-3 shadow-sm text-white text-decoration-none"
+                        >
+                          <i className="bi bi-speedometer2" size={18} /> Admin Dashboard
+                      </Link>
+                    }
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Details Grid */}
-          <div className="row g-4">
-            <div className="col-12 col-lg-6">
-              <div className="card h-100 border-0 shadow-sm p-4" style={{ borderRadius: '15px' }}>
-                <h5 className="fw-bold mb-4 d-flex align-items-center gap-2 text-danger">
-                  <Shield size={20} /> About Account
-                </h5>
-                <InfoRow icon={<Hash size={18} />} label="User ID" value={user.id} />
-                <InfoRow icon={<User size={18} />} label="Username" value={user.username} />
-                <InfoRow icon={<Shield size={18} />} label="Role" value={user.role} />
-                <InfoRow icon={<Activity size={18} />} label="Status" value={user.status} />
+            {/* Details Grid */}
+            <div className="row g-4">
+              <div className="col-12 col-lg-6">
+                <div className="card h-100 border-0 shadow-sm p-4" style={{ borderRadius: '15px' }}>
+                  <h5 className="fw-bold mb-4 d-flex align-items-center gap-2 text-danger">
+                    <Shield size={20} /> About Account
+                  </h5>
+                  <InfoRow icon={<Hash size={18} />} label="User ID" value={user.id} />
+                  <InfoRow icon={<User size={18} />} label="Username" value={user.username} />
+                  <InfoRow icon={<Shield size={18} />} label="Role" value={user.role} />
+                  <InfoRow icon={<Activity size={18} />} label="Status" value={user.status} />
+                </div>
+              </div>
+
+              <div className="col-12 col-lg-6">
+                <div className="card h-100 border-0 shadow-sm p-4" style={{ borderRadius: '15px' }}>
+                  <h5 className="fw-bold mb-4 d-flex align-items-center gap-2 text-danger">
+                    <UserCircle size={20} /> Personal details
+                  </h5>
+                  <InfoRow icon={<User size={18} />} label="Full Name" value={fullName} />
+                  <InfoRow icon={<User size={18} />} label="Gender" value={user.gender} />
+                  <InfoRow icon={<Calendar size={18} />} label="Date of Birth" value={formatDate(user.birthdate)} />
+                  <InfoRow icon={<MapPin size={18} />} label="Address" value={user.address} />
+                </div>
               </div>
             </div>
 
-            <div className="col-12 col-lg-6">
-              <div className="card h-100 border-0 shadow-sm p-4" style={{ borderRadius: '15px' }}>
-                <h5 className="fw-bold mb-4 d-flex align-items-center gap-2 text-danger">
-                  <UserCircle size={20} /> Personal details
-                </h5>
-                <InfoRow icon={<User size={18} />} label="Full Name" value={fullName} />
-                <InfoRow icon={<User size={18} />} label="Gender" value={user.gender} />
-                <InfoRow icon={<Calendar size={18} />} label="Date of Birth" value={formatDate(user.birthdate)} />
-                <InfoRow icon={<MapPin size={18} />} label="Address" value={user.address} />
-              </div>
-            </div>
-          </div>
-
-                <EditProfile
-                  show={showEditModal} 
-                  onClose={() => setShowEditModal(false)} 
-                  onSuccess={() => window.location.reload()} 
-                />
-
-                {showPasswordModal &&(
-                  <ChangePassword 
-                    show={showPasswordModal} 
-                    onClose={() => setShowPasswordModal(false)} 
+                  <EditProfile
+                    show={showEditModal} 
+                    onClose={() => setShowEditModal(false)} 
+                    onSuccess={() => window.location.reload()} 
                   />
-                )}
+
+                  {showPasswordModal &&(
+                    <ChangePassword 
+                      show={showPasswordModal} 
+                      onClose={() => setShowPasswordModal(false)} 
+                    />
+                  )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

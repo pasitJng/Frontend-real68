@@ -11,7 +11,8 @@ export default function EditProfile({ show, onClose, onSuccess }) {
     username: '',
     gender: '',
     birthdate: '',
-    address: ''
+    address: '',
+    email: ''
   });
   const [loading, setLoading] = useState(false);
 
@@ -43,7 +44,8 @@ export default function EditProfile({ show, onClose, onSuccess }) {
           username: userData.username || '',
           gender: userData.gender || '',
           birthdate: userData.birthdate ? userData.birthdate.slice(0, 10) : '',
-          address: userData.address || ''
+          address: userData.address || '',
+          email: userData.email || ''
         });
       }
     } catch (error) {
@@ -125,6 +127,8 @@ export default function EditProfile({ show, onClose, onSuccess }) {
         .modal-content {
           animation: slideUp 0.3s ease-out;
         }
+
+
         .form-control:focus,
         .form-select:focus {
           border-color: #dc3545;
@@ -217,8 +221,9 @@ export default function EditProfile({ show, onClose, onSuccess }) {
                         <User size={18} className="text-danger me-2" />
                         <span className="text-uppercase fw-bold text-secondary small">Account Information</span>
                       </div>
+
                       <div className="position-relative">
-                        <Mail size={18} className="input-icon" style={{
+                        <User size={18} className="input-icon" style={{
                                                                                 
                                                                                 top: '72%',
                                                                                 left: '12px',
@@ -229,12 +234,31 @@ export default function EditProfile({ show, onClose, onSuccess }) {
                         <label className="form-label fw-semibold text-secondary small mb-2">Username</label>
                         <input 
                           type="text" 
-                          className="form-control form-control-icon bg-light border-secondary-subtle" 
+                          className="form-control form-control-icon bg-light border-secondary-subtle text-secondary" 
                           value={formData.username} 
                           disabled 
                           style={{ cursor: 'not-allowed' }}
                         />
                       </div>
+
+                      <div className="position-relative">
+                        <Mail size={18} className="input-icon" style={{
+                                                                                
+                                                                                top: '72%',
+                                                                                left: '12px',
+                                                                                transform: 'translateY(-50%)',
+                                                                                zIndex: 10,
+                                                                                color: '#adb5bd'
+                                                                              }}/>
+                        <label className="form-label fw-semibold text-secondary small mb-1 mt-2">Email</label>
+                        <input 
+                          type="text" 
+                          className="form-control form-control-icon bg-light border-secondary-subtle text-secondary" 
+                          value={formData.email} 
+                          disabled 
+                          style={{ cursor: 'not-allowed' }}
+                        />
+                        </div>
                     </div>
                   </div>
 
@@ -345,9 +369,9 @@ export default function EditProfile({ show, onClose, onSuccess }) {
 
                   {/* Info Note */}
                   <div className="col-12">
-                    <div className="p-3 bg-light rounded-3 border border-secondary-subtle">
+                    <div className="p-3 bg-light rounded-3 border border-danger-subtle">
                       <small className="text-secondary">
-                        <strong>! Note:</strong> Username cannot be changed. Make sure all information is accurate before saving.
+                        <strong className='text-danger'> &gt; Note :</strong> Contact Admin to change your username or email.
                       </small>
                     </div>
                   </div>
