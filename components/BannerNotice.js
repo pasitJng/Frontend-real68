@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { Alert } from 'antd'
 import Marquee from 'react-fast-marquee'
 
+
 export default function BannerNotice() {
   const [visible, setVisible] = useState(true)
   const [mounted, setMounted] = useState(false) // เพิ่ม state เพื่อเช็คการ mount
@@ -26,12 +27,12 @@ export default function BannerNotice() {
           border: '1px solid #ffe58f',
           color: '#fa1414ff',
           fontSize: '1rem',
-          padding: '12px 16px',
+          padding: '15px 15px',
           zIndex: 1,
         }}
         message={
           <Marquee pauseOnHover={false} gradient={false} speed={60}>
-            🚧 Login & Register is being developed and improved! — ระบบ Login & Register กำลังพัฒนาและปรับปรุง! 🚧
+          🚧 ลืมรหัสผ่านโปรดติดต่อแอดมิน (ระบบจะส่ง OTP ไปยังอีเมลจำลองสำหรับการทดสอบเท่านั้น) -  Forgot password? Please contact Admin. (OTP is sent to a mock email for testing purposes only). 🚧
           </Marquee>
         }
       />
