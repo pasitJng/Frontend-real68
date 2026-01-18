@@ -6,6 +6,7 @@ import withReactContent from 'sweetalert2-react-content';
 import { useRouter } from 'next/navigation';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
+
 const MySwal = withReactContent(Swal);
 
 export default function Page() {
@@ -14,11 +15,13 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const [user, setUser] = useState({role: "" });
 
 const getUsers = async (isInitial = false) => {
   try {
     // ให้แสดงหน้า Loading เฉพาะตอนเข้าหน้าเว็บครั้งแรกเท่านั้น
     if (isInitial) setLoading(true); 
+
     
     const token = localStorage.getItem('token'); 
     const res = await fetch('https://backend-real68.vercel.app/api/users', {
@@ -43,6 +46,8 @@ useEffect(() => {
   const checkAuth = () => {
     const storedUser = localStorage.getItem("user");
     const token = localStorage.getItem('token');
+    
+    setUser({ role: "" });
 
     // 1. เช็คว่ามี Token ไหม
     if (!token || !storedUser) {
@@ -327,7 +332,11 @@ const handleDeleteOne = async (id) => {
                             </div>
                             <div>
                               <div className="fw-bold text-dark">{item.username}</div>
-                              <small className="text-muted">User Account</small>
+                              <small className="text-muted">&gt;&nbsp;
+                                <span className={`badge ${String(item.role || '').toLowerCase() === 'admin' ? 'bg-danger' : 'bg-primary'}`}>
+                                  {String(item.role || 'user').toUpperCase()}
+                                 </span>
+                              </small>
                             </div>
                           </div>
                         </td>
