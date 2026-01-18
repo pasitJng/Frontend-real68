@@ -149,7 +149,6 @@ const handleSubmit = async (e) => {
 
   return (
     <main>
-      <BannerNotice />
 
       {/* SVG Icons (ไม่จำเป็นแล้ว หากไม่ใช้ Bootstrap alert) */}
       {/* ...สามารถลบออกได้ถ้าไม่ใช้งาน... */}

@@ -9,66 +9,85 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState({ id: "", name: "" , role: ""});
+  const [user, setUser] = useState({ id: "", name: "", role: "" });
+  
+  // 1. ✅ เพิ่ม State เช็คสถานะการโหลด
+  const [isLoading, setIsLoading] = useState(true);
 
-  // ตรวจสอบ token และโหลดข้อมูล user
-useEffect(() => {
-  const token = localStorage.getItem("token");
-  const storedUserStr = localStorage.getItem("user");
+  // ✅ ฟังก์ชันตรวจสอบสถานะผู้ใช้จาก Backend (ใช้ /verify)
+  useEffect(() => {
+    const syncUserData = async () => {
+      const token = localStorage.getItem("token");
 
-  if (token && storedUserStr) {
-    try {
-      const parsedUser = JSON.parse(storedUserStr);
-      // ตรวจสอบว่ามีข้อมูลพื้นฐานไหม
-      if (parsedUser.id) {
-        setIsLoggedIn(true);
-        setUser({
-          id: parsedUser.id,
-          // ใช้ firstname จาก API ถ้าไม่มีให้ใช้ name ของเดิม
-          name: parsedUser.firstname || parsedUser.name || "User", 
-          // สำคัญมาก: ต้องดึง role ออกมาให้ได้
-          role: parsedUser.role || "" 
-        });
-        console.log("Navbar User Role:", parsedUser.role);
+      if (!token) {
+        setIsLoggedIn(false);
+        setUser({ id: "", name: "", role: "" });
+        setIsLoading(false); // ✅ ถ้าไม่มี Token ก็หยุดโหลดทันที
+        return;
       }
-    } catch (e) {
-      console.error("Parsing error", e);
-    }
-  } else {
-    setIsLoggedIn(false);
-    setUser({ id: "", name: "", role: "" });
-  }
-}, [pathname]);
 
-useEffect(() => {
-  const storedUser = localStorage.getItem("user");
-  if (storedUser) {
-    const parsedUser = JSON.parse(storedUser);
-    setUser({
-      name: parsedUser.name || "Guest",
-      id: parsedUser.id || "N/A",
-      role: parsedUser.role || "user" // ✅ ต้องดึงตัวนี้มาด้วย
-    });
-    setIsLoggedIn(true);
-  }
-}, []);
+      try {
+        const res = await fetch('https://backend-real68.vercel.app/api/users/verify', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
 
+        if (res.ok) {
+          const latestData = await res.json();
 
+          localStorage.setItem("user", JSON.stringify(latestData));
 
-  // โหลด Bootstrap
+          setIsLoggedIn(true);
+          setUser({
+            id: latestData.id,
+            name: latestData.username || latestData.firstname || "User",
+            role: String(latestData.role || "").toLowerCase()
+          });
+
+          if (latestData.role.toLowerCase() !== 'admin' && pathname.startsWith('/admin')) {
+            router.push('/');
+          }
+
+        } else if (res.status === 401 || res.status === 403) {
+          handleLogout();
+        }
+      } catch (error) {
+        console.error("Sync failed:", error);
+        // กรณี Server มีปัญหา ให้ลองใช้ข้อมูลเก่าจาก Cache
+        const cachedUser = localStorage.getItem("user");
+        if (cachedUser) {
+          const parsed = JSON.parse(cachedUser);
+          setIsLoggedIn(true);
+          setUser({
+            id: parsed.id,
+            name: parsed.username || parsed.firstname || "User",
+            role: String(parsed.role || "").toLowerCase()
+          });
+        }
+      } finally {
+        // 2. ✅ ไม่ว่าจะสำเร็จหรือพัง ต้องสั่งหยุดโหลดเสมอ
+        setIsLoading(false); 
+      }
+    };
+
+    syncUserData();
+  }, [pathname]); 
+
+  // โหลด Bootstrap JS
   useEffect(() => {
     import("bootstrap/dist/js/bootstrap.bundle.min.js");
   }, []);
 
-  // ปิด Navbar เมื่อเปลี่ยนหน้า
+  // ปิด Navbar อัตโนมัติ
   useEffect(() => {
     const closeNavbar = async () => {
       const navbarCollapse = document.querySelector(".navbar-collapse");
-      if (navbarCollapse && navbarCollapse.classList.contains("show")) {
+      if (navbarCollapse?.classList.contains("show")) {
         const bootstrap = await import("bootstrap/dist/js/bootstrap.bundle.min.js");
-        const collapseInstance = new bootstrap.Collapse(navbarCollapse, {
-          toggle: false,
-        });
+        const collapseInstance = new bootstrap.Collapse(navbarCollapse, { toggle: false });
         collapseInstance.hide();
       }
     };
@@ -89,11 +108,11 @@ useEffect(() => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // ฟังก์ชัน Logout
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setIsLoggedIn(false);
+    setUser({ id: "", name: "", role: "" });
     router.push("/Login");
   };
 
@@ -126,9 +145,7 @@ useEffect(() => {
               <li className="nav-item" key={href}>
                 <Link
                   href={href}
-                  className={`nav-link px-3 rounded-pill ${
-                    pathname === href ? "active" : ""
-                  }`}
+                  className={`nav-link px-3 rounded-pill ${pathname === href ? "active" : ""}`}
                 >
                   {label}
                 </Link>
@@ -136,8 +153,15 @@ useEffect(() => {
             ))}
           </ul>
 
-          {/* ถ้า login แล้วให้โชว์ User Dropdown */}
-          {isLoggedIn ? (
+          {/* 3. ✅ ส่วนแสดงผลที่แก้ใหม่: เช็ค isLoading ก่อนเสมอ */}
+          {isLoading ? (
+            // แสดง Spinner ระหว่างรอเช็คสถานะ (ขนาดเท่าปุ่ม login เพื่อความเนียน)
+            <div className="ms-lg-3 mt-3 mt-lg-0 d-flex justify-content-center align-items-center" style={{ minWidth: "100px", height: "45px" }}>
+               <div className="spinner-border text-danger spinner-border-sm" role="status">
+                 <span className="visually-hidden">Loading...</span>
+               </div>
+            </div>
+          ) : isLoggedIn ? (
             <div className="dropdown ms-lg-3 mt-3 mt-lg-0 text-center text-lg-end">
               <button
                 className="btn btn-dark rounded-circle d-flex align-items-center justify-content-center mx-auto mx-lg-0"
@@ -154,25 +178,25 @@ useEffect(() => {
               >
                 <li className="px-3 py-2 text-center text-lg-start">
                   <p className="mb-1 fw-bold text-danger">
-                    <i className="bi bi-person-circle me-2"></i>{user.name || "Guest"}
+                    <i className="bi bi-person-circle me-2"></i>{user.name}
                   </p>
-                  <p className="mb-0 text-muted small">ID: {user.id || "N/A"}</p>
+                  <p className="mb-0 text-muted small">ID: {user.id}</p>
+                  <span className={`badge ${user.role === 'admin' ? 'bg-danger' : 'bg-primary'} mt-1`}>
+                    {user.role.toUpperCase()}
+                  </span>
                 </li>
                 <li><hr className="dropdown-divider" /></li>
-            {/* ปุ่มไปที่ Dashboard */}
-                {/* ถ้าเป็น user ปกติ อาจจะโชว์เมนูอื่นแทน (ถ้ามี) */}
                 <li>
-                      <Link href="/Profile/users" className="dropdown-item fw-bold">
-                        <i className="bi bi-person me-2"></i> My Profile
-                      </Link>
+                  <Link href="/Profile/users" className="dropdown-item fw-bold">
+                    <i className="bi bi-person me-2"></i> My Profile
+                  </Link>
                 </li>
 
-                  {/* เช็คว่าเป็น admin เท่านั้นถึงจะเห็นปุ่มนี้ */}
-                {user.role?.toLowerCase() === 'admin' && (
+                {user.role === 'admin' && (
                   <li>
                     <Link
                       href="/admin/users"
-                      className="dropdown-item  d-flex align-items-center text-primary fw-bold"
+                      className="dropdown-item d-flex align-items-center text-primary fw-bold"
                     >
                       <i className="bi bi-speedometer2 me-2"></i> Admin Dashboard
                     </Link>
@@ -190,33 +214,24 @@ useEffect(() => {
               </ul>
             </div>
           ) : (
-            <Link
-              href="/Login"
-              className="text-decoration-none ms-lg-3 mt-3 mt-lg-0 d-block"
-            >
+            <Link href="/Login" className="text-decoration-none ms-lg-3 mt-3 mt-lg-0 d-block">
               <button className="btn-login-custom rounded-pill px-4 py-2 fw-bold d-flex align-items-center mx-auto mx-lg-0">
-                <i className="bi bi-person me-2"></i>
-                Login
+                <i className="bi bi-person me-2"></i> Login
               </button>
             </Link>
-            
-          
           )}
-
         </div>
       </div>
-        <style jsx>{`
-              /* ทำให้ dropdown อยู่กลางเมื่อเป็นจอเล็ก */
-                @media (max-width: 991px) {
-                  .dropdown-menu-custom {
-                    left: 50% !important;
-                    right: auto !important;
-                    transform: translateX(-50%) !important;
-                    text-align: center;
-                    min-width: 220px;
-                  }
-                }
-
+      <style jsx>{`
+        @media (max-width: 991px) {
+          .dropdown-menu-custom {
+            left: 50% !important;
+            right: auto !important;
+            transform: translateX(-50%) !important;
+            text-align: center;
+            min-width: 220px;
+          }
+        }
       `}</style>
     </nav>
   );

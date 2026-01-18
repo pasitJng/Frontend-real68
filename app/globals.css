@@ -40,3 +40,22 @@ input::-webkit-credentials-auto-fill-button {
   pointer-events: none;
 }
 
+/* ตั้งค่าเริ่มต้น (สำหรับ Desktop) */
+.responsive-popup {
+    width: 450px !important; /* ใช้ค่า Pixel นิ่งๆ จะสวยกว่า % ในจอคอม */
+}
+
+/* สำหรับ Tablet (จอเล็กกว่า 992px) */
+@media (max-width: 992px) {
+    .responsive-popup {
+        width: 70% !important;
+    }
+}
+
+/* สำหรับ Mobile (จอเล็กกว่า 576px) */
+@media (max-width: 576px) {
+    .responsive-popup {
+        width: 90% !important;
+        font-size: 0.9rem; /* ลดขนาดตัวอักษรลงนิดหน่อยในมือถือ */
+    }
+}
