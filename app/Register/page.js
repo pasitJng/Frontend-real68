@@ -12,6 +12,7 @@ export default function Register() {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -65,6 +66,8 @@ const handleSubmit = async (e) => {
   setDuplicateFields({}); 
   setValidated(false);
 
+  setLoading(true);
+  
   try {
     const response = await fetch("https://backend-real68.vercel.app/api/register", {
       method: "POST",
@@ -79,6 +82,7 @@ const handleSubmit = async (e) => {
     
 
     if (!response.ok) {
+      setLoading(false);
       // 2. กรณีหลังบ้านตอบกลับเป็น Error (เช่น 400 - Username/Email ซ้ำ)
       const errorMsg = result.error || '';
       const newDuplicateErrors = {}; // สร้าง Object เปล่าเพื่อรอรับ Error
@@ -94,6 +98,7 @@ const handleSubmit = async (e) => {
             }
 
         setDuplicateFields(newDuplicateErrors);
+
 
         Swal.fire({
           icon: 'warning',
@@ -134,6 +139,7 @@ const handleSubmit = async (e) => {
     setValidated(false);
 
   } catch (error) {
+    setLoading(false);
     // 4. กรณีเกิดข้อผิดพลาดในการเชื่อมต่อ (Network Error)
     Swal.fire({
       icon: 'error',
@@ -353,8 +359,20 @@ const handleSubmit = async (e) => {
                   </div>
                 </div>
 
-                <button type="submit" className="btn btn-danger w-100 fw-bold mt-2">
-                  Register
+                <button 
+                  type="submit" 
+                  className="btn btn-danger w-100 fw-bold d-flex align-items-center justify-content-center"
+                  disabled={loading} // 🔒 ห้ามกดซ้ำถ้ากำลังโหลด
+                >
+                  {loading ? (
+                    <>
+                      {/* 🌀 Spinner หมุนๆ */}
+                      <span className="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                      <span>Registering...</span>
+                    </>
+                  ) : (
+                    "Register"
+                  )}
                 </button>
 
                 <div className="text-center mt-3">

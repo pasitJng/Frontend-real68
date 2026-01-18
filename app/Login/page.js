@@ -13,6 +13,7 @@ export default function Login() {
   const [formValidated, setFormValidated] = useState(false);
   const router = useRouter();
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const savedUsername = localStorage.getItem("rememberedUsername");
@@ -59,6 +60,8 @@ const handleSubmit = async (e) => {
     });
     return;
   }
+
+  setLoading(true);
 
   try {
     // 🔹 เรียก API ให้ตรงกับโฟลเดอร์จริง
@@ -122,6 +125,7 @@ const userData = {
 } else if (data.error === "Invalid username or password") {
 
     } else if (data.error) {
+      setLoading(false);
       Swal.fire({
         icon: 'error',
         title: 'Login failed',
@@ -132,6 +136,7 @@ const userData = {
       });
     }
   } catch (error) {
+    setLoading(false);
     Swal.fire({
       icon: 'error',
       title: 'Server Error',
@@ -219,9 +224,21 @@ const userData = {
                   </div>
 
                   {/* Submit */}
-                  <button type="submit" className="btn btn-danger w-100 fw-bold">
-                    Log In
-                  </button>
+                    <button 
+                      type="submit" 
+                      className="btn btn-danger w-100 fw-bold d-flex align-items-center justify-content-center"
+                      disabled={loading} // 🔒 ห้ามกดซ้ำถ้ากำลังโหลด
+                    >
+                      {loading ? (
+                        <>
+                          {/* 🌀 Spinner หมุนๆ */}
+                          <span className="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                          <span>Logging in...</span>
+                        </>
+                      ) : (
+                        "Log In"
+                      )}
+                    </button>
 
                   {/* Links */}
                   <div className="d-flex flex-column flex-sm-row justify-content-between mt-3 gap-2 text-center text-sm-start">
