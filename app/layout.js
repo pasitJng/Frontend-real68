@@ -1,13 +1,10 @@
-'use client';
+// app/layout.js
 
-import { useState } from 'react';
+// ❌ ลบ 'use client' ออกจากไฟล์นี้
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Prompt } from "next/font/google";
-
-import Navigation from '../components/Navigation';
-import Footer from '../components/Footer';
-import AlertModal from "@/components/AlertModal";
+import ClientLayout from '../components/ClientLayout'; // ✅ เรียกใช้ไฟล์ที่เราแยกไปเมื่อกี้
 
 const prompt = Prompt({
   subsets: ["thai", "latin"],
@@ -15,26 +12,23 @@ const prompt = Prompt({
   display: "swap",
 });
 
+// ✅ เพิ่มส่วนนี้เพื่อเปลี่ยนชื่อบน Tab Browser
+export const metadata = {
+  title: "Panigale", // <-- แก้ชื่อตรงนี้
+  description: "Collection of Panigale",
+  icons: {
+    icon: '/favicon.ico', // (ทางเลือก) ถ้ามีรูปไอคอน
+  },
+};
+
 export default function RootLayout({ children }) {
-  const [alertVisible, setAlertVisible] = useState(false); //*ปิดใช้งาน Alert ให้พิมพ์ false*
-
-  const handleClose = () => {
-    setAlertVisible(false);
-  };
-
   return (
     <html lang="en">
       <body className={`d-flex flex-column min-vh-100 ${prompt.className}`} style={{ scrollBehavior: "smooth" }}>
-        <div style={{ marginTop: "70px" }}></div>
-        
-        <Navigation />
-
-        {/* ✅ AlertModal จะแสดงในทุกหน้า */}
-        <AlertModal visible={alertVisible} onClose={handleClose} />
-
-        <main className="flex-fill">{children}</main>
-
-        <Footer />
+        {/* ส่ง children ไปให้ ClientLayout จัดการต่อ */}
+        <ClientLayout>
+            {children}
+        </ClientLayout>
       </body>
     </html>
   );
