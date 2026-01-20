@@ -5,11 +5,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { 
   User, Mail, MapPin, Calendar, Shield, Hash,
-  UserCircle, Activity, Edit, Lock, Gauge, AlertCircle
+  UserCircle, Activity, Edit, Lock, Gauge, AlertCircle, 
+  Trash2, AlertTriangle
 } from 'lucide-react';
 import EditProfile from '@/components/EditProfile';
 import ChangePassword from '@/components/ChangePassword';
-
+import Swal from 'sweetalert2';
 
 // --- ฟังก์ชันช่วยเหลือ (Utility Functions) ---
 const formatDate = (dateString) => {
@@ -206,6 +207,95 @@ export default function UserProfile() {
 
   const fullName = `${user.prefix || ''} ${user.firstname} ${user.lastname} `.trim();
 
+const handleDeleteAccount = async () => {
+
+      if (user.role?.toLowerCase() === 'admin') {
+         await Swal.fire({
+          icon : 'error',
+          title : 'Access Denied', 
+          text : 'Admin accounts cannot be deleted.', 
+          showConfirmButton : false,
+          timer : 2000,
+          timerProgressBar : true,
+        });
+        return;
+      }
+      // 1. เรียก Swal แบบมี Input
+      const result = await Swal.fire({
+        title: 'Are you absolutely sure?',
+        html: `
+          <div style="text-align: left; font-size: 0.95rem; color: #555;">
+            <p>This action cannot be undone. This will permanently delete the 
+            <strong style="color: #d33;">${user.username}</strong> account and remove your data from our servers.</p>
+            <p class="mb-2">Please type <strong>${user.username}</strong> to confirm.</p>
+          </div>
+        `,
+        input: 'text',
+        inputPlaceholder: user.username, // Placeholder เป็นชื่อ User
+        inputAttributes: {
+          autocapitalize: 'off',
+          autocorrect: 'off'
+        },
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'I understand, delete this account',
+        showLoaderOnConfirm: true, // แสดง Loading ตอนกด
+        
+        // 2. ตรวจสอบว่าพิมพ์ถูกไหมก่อนกด OK
+        preConfirm: (inputValue) => {
+          if (inputValue !== user.username) {
+            Swal.showValidationMessage(`Please type "${user.username}" to confirm.`);
+            return false; // ห้ามผ่าน
+          }
+          return true; // ผ่าน
+        }
+      });
+  
+      // 3. ถ้าพิมพ์ถูกและกด Confirm ให้เริ่มลบ
+      if (result.isConfirmed) {
+        try {
+          // แสดง Loading ระหว่างลบจริง (กัน User กดซ้ำ)
+          Swal.fire({
+            title: 'Deleting account...',
+            text: 'Please wait',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+          });
+
+          const token = localStorage.getItem("token");
+          const res = await fetch(`https://backend-real68.vercel.app/api/users/${user.id}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
+  
+          if (res.ok) {
+            await Swal.fire({
+               icon: 'success',
+               title: 'Deleted!',
+               text: 'Your account has been deleted.',
+               timer: 2000,
+               showConfirmButton: false,
+               timerProgressBar: true,
+            });
+            
+            // ล้างข้อมูลและเด้งไปหน้า Login
+            localStorage.clear();
+            window.location.href = '/Login';
+          } else {
+            throw new Error('Failed to delete');
+          }
+        } catch (error) {
+          Swal.fire('Error', 'Something went wrong.', 'error');
+        }
+      }
+    };
+
   return (
     <>
       <style>{frameAnimationStyles}</style>
@@ -328,6 +418,35 @@ export default function UserProfile() {
                   <InfoRow icon={<User size={18} />} label="Gender" value={user.gender} />
                   <InfoRow icon={<Calendar size={18} />} label="Date of Birth" value={formatDate(user.birthdate)} />
                   <InfoRow icon={<MapPin size={18} />} label="Address" value={user.address} />
+                </div>
+              </div>
+            </div>
+
+            <div className="card mt-4 border-danger shadow-sm overflow-hidden" style={{ borderRadius: '15px' }}>
+              <div className="card-header bg-danger-subtle text-danger fw-bold border-bottom border-danger-subtle d-flex align-items-center gap-2 p-3">
+                <AlertTriangle size={20} /> Delete Account
+              </div>
+              <div className="card-body p-4">
+                <div className="row align-items-center g-3">
+                    {/* Text Column */}
+                    <div className="col-12 col-md-8 text-center text-md-start">
+                        <h6 className="fw-bold text-dark mb-1">Delete this account</h6>
+                        <p className="text-secondary small mb-0">
+                            Once you delete your account, there is no going back. Please be certain.
+                        </p>
+                    </div>
+                    {/* Button Column */}
+                    <div className="col-12 col-md-4 text-center text-md-end">
+                        <button 
+                        onClick={handleDeleteAccount}
+                        className="btn btn-outline-danger w-100 w-md-auto d-inline-flex align-items-center justify-content-center gap-2 rounded-3 fw-medium"
+                        disabled ={user.role?.toLowerCase() === 'admin'}
+                        style={{ cursor: user.role?.toLowerCase() === 'admin' ? 'not-allowed' : 'pointer' }}
+                        >
+                        <Trash2 size={18} /> {user.role?.toLowerCase() === 'admin' ? 'Admin Cannot Delete' : 'Delete Account'}
+                        
+                        </button>
+                    </div>
                 </div>
               </div>
             </div>
