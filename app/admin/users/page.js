@@ -31,6 +31,29 @@ const getUsers = async (isInitial = false) => {
       }
     });
 
+    // ถ้า Server บอกว่า 401 (ไม่มีสิทธิ์/หาUserไม่เจอ) หรือ 403 (ห้ามเข้า)
+    if (res.status === 401 || res.status === 403) {
+        
+        // ล้างข้อมูลในเครื่องทิ้งให้หมด
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('rememberedPassword'); // ล้างให้หมดจด
+
+        // แจ้งเตือน User (แล้วแต่จะใส่หรือไม่ใส่ก็ได้)
+        await Swal.fire({
+            icon: 'error',
+            title: 'Access Denied',
+            text: 'Your account is invalid or has been deleted.',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+        });
+
+        // ดีดไปหน้า Login ทันที
+        router.push('/Login');
+        return; 
+    }
+
     if (res.ok) {
       const data = await res.json();
       setItems(data);
@@ -120,7 +143,8 @@ const handleDeleteOne = async (id) => {
       try {
         await Promise.all(
           idsToDelete.map((uid) =>
-            fetch(`/api/users?id=${uid}`, {
+            // ✅✅✅ 2. แก้ URL ตรงนี้ให้เป็น URL เต็ม และใช้ /uid แทน ?id= ✅✅✅
+            fetch(`https://backend-real68.vercel.app/api/users/${uid}`, { 
               method: 'DELETE',
               headers: {
                 'Authorization': `Bearer ${token}`,
@@ -138,8 +162,10 @@ const handleDeleteOne = async (id) => {
             timer: 2000,
             timerProgressBar: true,
           })
+        
+        // Admin แค่เคลียร์ค่าแล้วโหลดตารางใหม่ (ไม่ต้องเด้งออก)
         setSelectedIds([]);
-        getUsers(); // โหลดข้อมูลใหม่หลังจากลบสำเร็จ
+        getUsers(); 
         
       } catch (err) {
         console.error('Delete error:', err);
