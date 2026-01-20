@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Swal from 'sweetalert2';
 import './navbar.css';
 
 export default function Navbar() {
@@ -46,14 +47,33 @@ export default function Navbar() {
             name: latestData.username || latestData.firstname || "User",
             role: String(latestData.role || "").toLowerCase()
           });
+          
 
           if (latestData.role.toLowerCase() !== 'admin' && pathname.startsWith('/admin')) {
             router.push('/');
           }
 
+        } else if (res.status === 404) { 
+            // ✅ 2. เพิ่มส่วนนี้: กรณีหา User ไม่เจอ (โดนลบ) ให้เด้งเตือนก่อน
+            
+            setIsLoading(false); // หยุดโหลดเพื่อให้ Alert ขึ้นชัดๆ
+
+            await Swal.fire({
+              icon: 'error',
+              title: 'Account Deleted',
+              text: 'Your account has been deleted.',
+              showConfirmButton: false,
+              timer: 5000,
+              timerProgressBar: true,
+            });
+
+            handleLogout(); // พอกด OK ค่อยดีดไปหน้า Login
+
         } else if (res.status === 401 || res.status === 403) {
-          handleLogout();
+            // กรณี Token หมดอายุ ให้ดีดออกเลย (หรือจะใส่ Alert ด้วยก็ได้)
+            handleLogout();
         }
+
       } catch (error) {
         console.error("Sync failed:", error);
         // กรณี Server มีปัญหา ให้ลองใช้ข้อมูลเก่าจาก Cache
